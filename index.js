@@ -10,9 +10,9 @@ io.on('connection', socket => {
    
     console.log('a user connected');
 
-    socket.on('chat message', message => {
-        console.log('message: ' + message);
-        io.emit('chat message', message);
+    socket.on('node update', updatedNode => {
+        console.log(updatedNode);
+        io.emit('node update', updatedNode);
     });
 
     
