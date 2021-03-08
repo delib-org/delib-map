@@ -8,7 +8,7 @@ exports.simpleLogin = (req, res) => {
         console.log('mapId:', mapId)
 
         if (loginName) {
-            res.cookie('user', loginName);
+            res.cookie('user', JSON.stringify({username: loginName}));
 
             res.send({ ok: true, mapId });
 

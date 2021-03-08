@@ -18,6 +18,8 @@ function handleLogin(mapId) {
                 .then(({mapId, ok}) => {
                     if(mapId){
                         window.location.replace(`/map?mapId=${mapId}`);
+                    } else{
+                        window.location.replace(`/maps`);
                     }
                 })
                 .catch(e => console.error(e))

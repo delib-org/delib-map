@@ -24,6 +24,8 @@ function handleLogin(mapId) {
 
         if (mapId) {
           window.location.replace("/map?mapId=".concat(mapId));
+        } else {
+          window.location.replace("/maps");
         }
       })["catch"](function (e) {
         return console.error(e);

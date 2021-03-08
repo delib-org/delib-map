@@ -10,37 +10,48 @@ app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
 // index page
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.render('pages/index');
 });
 
 // about page
-app.get('/about', function(req, res) {
+app.get('/about', function (req, res) {
     res.render('pages/about');
 });
 
 
 
-app.get('/login', function(req, res) {
+app.get('/login', function (req, res) {
 
-    const {mapId} = req.query;
-    console.log(mapId)
+    const { mapId } = req.query;
 
-    res.render('pages/login', {mapId});
+    res.render('pages/login', { mapId });
+});
+
+app.get('/maps', function (req, res) {
+    try {
+        const user = req.cookies.user;
+
+        res.render('pages/maps',);
+    } catch (e) {
+        res.redirect('/')
+    }
 });
 
 
-app.get('/map', function(req, res) {
+app.get('/map', function (req, res) {
 
     const user = req.cookies.user;
 
-    if(user){
-        res.render('pages/map');
+    const { mapId } = req.query;
+
+    if (user) {
+        res.render('pages/map', { mapId });
     } else {
-        res.redirect('/login')
+        res.redirect(`/login?mapId=${mapId}`)
     }
 
-    
+
 });
 
 
@@ -51,8 +62,8 @@ console.log(__dirname)
 
 
 //routers
-const networkRouter = require("./network/ntkRoute");
-app.use('/network',networkRouter);
+const mapsRoute = require("./maps/mapRoute");
+app.use('/maps', mapsRoute);
 
 const usersRouter = require('./users/usersRoute');
 app.use('/users', usersRouter);
@@ -65,9 +76,11 @@ const { ObjectId } = require('mongodb');
 
 
 const db = mongoose.connection;
+exports.db = db;
+
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
-  console.log("we are connected to DB");
+    console.log("we are connected to DB");
 });
 
 

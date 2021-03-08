@@ -26,27 +26,37 @@ app.get('/about', function (req, res) {
 });
 app.get('/login', function (req, res) {
   var mapId = req.query.mapId;
-  console.log(mapId);
   res.render('pages/login', {
     mapId: mapId
   });
 });
+app.get('/maps', function (req, res) {
+  try {
+    var user = req.cookies.user;
+    res.render('pages/maps');
+  } catch (e) {
+    res.redirect('/');
+  }
+});
 app.get('/map', function (req, res) {
   var user = req.cookies.user;
+  var mapId = req.query.mapId;
 
   if (user) {
-    res.render('pages/map');
+    res.render('pages/map', {
+      mapId: mapId
+    });
   } else {
-    res.redirect('/login');
+    res.redirect("/login?mapId=".concat(mapId));
   }
 }); //static
 
 app.use(express["static"](__dirname + '/public'));
 console.log(__dirname); //routers
 
-var networkRouter = require("./network/ntkRoute");
+var mapsRoute = require("./maps/mapRoute");
 
-app.use('/network', networkRouter);
+app.use('/maps', mapsRoute);
 
 var usersRouter = require('./users/usersRoute');
 
@@ -63,6 +73,7 @@ var _require = require('mongodb'),
     ObjectId = _require.ObjectId;
 
 var db = mongoose.connection;
+exports.db = db;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function () {
   console.log("we are connected to DB");
