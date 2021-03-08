@@ -4,6 +4,7 @@ const socket = io();
 
 
 const editBox = document.getElementById('editBox');
+const editForm = document.getElementById('editForm');
 
 // create an array with nodes
 var nodes = new vis.DataSet([
@@ -66,27 +67,33 @@ network.on('click', e => {
 
 network.on('select', e => {
     const { nodes, pointer } = e;
+    console.log(e)
 
     editBox.style.display = 'block'
 
     editBox.style.top = `${pointer.DOM.y}px`;
     editBox.style.left = `${pointer.DOM.x}px`;
 
-    const editForm = document.getElementById('editForm');
-    editForm.dataset.nodeId = nodes[0];
-    data.nodes.updateOnly({ id: nodes[0], label: "Updating.........." })
+   
+    const nodeId = nodes[0];
+
+    const nodeLabel = data.nodes.get(nodeId)
+
+    console.dir(editForm)
+
+    editForm.children.nodeName.value = nodeLabel.label;
+    editForm.dataset.nodeId = nodeId
+    
 
 })
 
-data.nodes.updateOnly({ id: 2, label: "BOOOOOMMMMM12" })
-data.nodes.add([{ id: 6, label: 'Aded' }]);
-data.edges.add({ from: 6, to: 1 })
+
 
 function handleUpdate(e) {
     console.log(e)
     e.preventDefault();
 
-    const nodeName = e.target.children.nodename.value;
+    const nodeName = e.target.children.nodeName.value;
     const nodeId = parseInt(e.target.dataset.nodeId);
 
     console.log(nodeId, nodeName);

@@ -20,7 +20,10 @@
   },
   "homepage": "https://github.com/delib-org/delib-map#readme",
   "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "ejs": "^3.1.6",
     "express": "^4.17.1",
+    "mongoose": "^5.11.19",
     "socket.io": "^3.1.2"
   }
 }

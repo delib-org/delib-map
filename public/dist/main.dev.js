@@ -4,7 +4,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 console.log('main');
 var socket = io();
-var editBox = document.getElementById('editBox'); // create an array with nodes
+var editBox = document.getElementById('editBox');
+var editForm = document.getElementById('editForm'); // create an array with nodes
 
 var nodes = new vis.DataSet([{
   id: 1,
@@ -70,33 +71,21 @@ network.on('click', function (e) {
 network.on('select', function (e) {
   var nodes = e.nodes,
       pointer = e.pointer;
+  console.log(e);
   editBox.style.display = 'block';
   editBox.style.top = "".concat(pointer.DOM.y, "px");
   editBox.style.left = "".concat(pointer.DOM.x, "px");
-  var editForm = document.getElementById('editForm');
-  editForm.dataset.nodeId = nodes[0];
-  data.nodes.updateOnly({
-    id: nodes[0],
-    label: "Updating.........."
-  });
-});
-data.nodes.updateOnly({
-  id: 2,
-  label: "BOOOOOMMMMM12"
-});
-data.nodes.add([{
-  id: 6,
-  label: 'Aded'
-}]);
-data.edges.add({
-  from: 6,
-  to: 1
+  var nodeId = nodes[0];
+  var nodeLabel = data.nodes.get(nodeId);
+  console.dir(editForm);
+  editForm.children.nodeName.value = nodeLabel.label;
+  editForm.dataset.nodeId = nodeId;
 });
 
 function handleUpdate(e) {
   console.log(e);
   e.preventDefault();
-  var nodeName = e.target.children.nodename.value;
+  var nodeName = e.target.children.nodeName.value;
   var nodeId = parseInt(e.target.dataset.nodeId);
   console.log(nodeId, nodeName);
   console.log(_typeof(nodeName));

@@ -1,0 +1,41 @@
+<html lang="en">
+
+<head>
+    <%- include('../components/head'); %>
+        <link rel="stylesheet" type='text/css' href="./dist/login.css">
+
+</head>
+
+<body class="container">
+
+
+    <div class='page splashPage'>
+        <div class='centerElement'>
+            <div id='login__splashName' class='opacity07'>
+                Delib-Maps
+            </div>
+            <div id='login__splashSubName' class='opacity07'>
+                מחליטים ביחד
+            </div>
+
+            <div class='anonymousLogin'>
+                <input type='text' id='loginSimple' class='inputLogin' placeholder='רשמו כינוי' />
+                 <div 
+                 class="buttons loginButton" 
+                  onclick='handleLogin( "<%= mapId %>" )' 
+                 >
+                    <div>התחברות עם משתמש זמני</div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+    <script src="login.js"></script>
+
+</body>
+
+</html>

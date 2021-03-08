@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../components/head'); %>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include('../components/header'); %>
+            <script type="text/javascript"
+                src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+            <script src="/socket.io/socket.io.js"></script>
+    </header>
+
+    <main>
+        <div id="mynetwork"></div>
+        <div id='editBox' class="box">
+            <form onsubmit='handleUpdate(event)' id='editForm'>
+                <input type="text" placeholder="Node name" name='nodeName'>
+                <button type='submit'>Close</button>
+            </form>
+        </div>
+
+        <script src="main.js"></script>
+    </main>
+
+    <footer>
+        <%- include('../components/footer'); %>
+    </footer>
+
+</body>
+
+</html>
