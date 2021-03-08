@@ -18,39 +18,27 @@ async function renderMap() {
         if (!mapId) throw new Error('no map id in URL')
 
         const r = await fetch(`/maps/get-map?mapId=${mapId}`);
-        const map = await r.json()
+        const {map} = await r.json()
 
         if(!map) throw new Error('DB didnt returned a map')
 
-        // const {nodes, edges} = map;
+        const {nodes, edges} = map;
 
-        console.log(map)
+        console.log(nodes, edges)
 
         // create an array with nodes
-        var nodes = new vis.DataSet([
-            { id: 1, label: "Node 1" },
-            { id: 2, label: "Node 2" },
-            { id: 3, label: "Node 3" },
-            { id: 4, label: "Node 4" },
-            { id: 5, label: "Node 5" },
-        ]);
+        var nodesDS = new vis.DataSet(nodes);
 
         // create an array with edges
-        var edges = new vis.DataSet([
-            { from: 1, to: 3 },
-            { from: 1, to: 2 },
-            { from: 2, to: 4 },
-            { from: 2, to: 5 },
-            { from: 3, to: 2 },
-        ]);
+        var edgesDS = new vis.DataSet(edges);
 
 
 
         // create a network
         var container = document.getElementById("mynetwork");
         var data = {
-            nodes: nodes,
-            edges: edges,
+            nodes: nodesDS,
+            edges: edgesDS,
         };
         const options = {
             nodes: {

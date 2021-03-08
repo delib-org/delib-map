@@ -12,7 +12,7 @@ function getMapId() {
 }
 
 function renderMap() {
-  var _editBox, editForm, mapId, r, map, nodes, edges, container, data, options, network;
+  var _editBox, editForm, mapId, r, _ref, map, nodes, edges, nodesDS, edgesDS, container, data, options, network;
 
   return regeneratorRuntime.async(function renderMap$(_context) {
     while (1) {
@@ -40,57 +40,28 @@ function renderMap() {
           return regeneratorRuntime.awrap(r.json());
 
         case 11:
-          map = _context.sent;
+          _ref = _context.sent;
+          map = _ref.map;
 
           if (map) {
-            _context.next = 14;
+            _context.next = 15;
             break;
           }
 
           throw new Error('DB didnt returned a map');
 
-        case 14:
-          // const {nodes, edges} = map;
-          console.log(map); // create an array with nodes
+        case 15:
+          nodes = map.nodes, edges = map.edges;
+          console.log(nodes, edges); // create an array with nodes
 
-          nodes = new vis.DataSet([{
-            id: 1,
-            label: "Node 1"
-          }, {
-            id: 2,
-            label: "Node 2"
-          }, {
-            id: 3,
-            label: "Node 3"
-          }, {
-            id: 4,
-            label: "Node 4"
-          }, {
-            id: 5,
-            label: "Node 5"
-          }]); // create an array with edges
+          nodesDS = new vis.DataSet(nodes); // create an array with edges
 
-          edges = new vis.DataSet([{
-            from: 1,
-            to: 3
-          }, {
-            from: 1,
-            to: 2
-          }, {
-            from: 2,
-            to: 4
-          }, {
-            from: 2,
-            to: 5
-          }, {
-            from: 3,
-            to: 2
-          }]); // create a network
+          edgesDS = new vis.DataSet(edges); // create a network
 
           container = document.getElementById("mynetwork");
           data = {
-            nodes: nodes,
-            edges: edges
+            nodes: nodesDS,
+            edges: edgesDS
           };
           options = {
             nodes: {
@@ -127,20 +98,20 @@ function renderMap() {
             editForm.children.nodeName.value = nodeLabel.label;
             editForm.dataset.nodeId = nodeId;
           });
-          _context.next = 28;
+          _context.next = 30;
           break;
 
-        case 25:
-          _context.prev = 25;
+        case 27:
+          _context.prev = 27;
           _context.t0 = _context["catch"](0);
           console.error(_context.t0);
 
-        case 28:
+        case 30:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[0, 25]]);
+  }, null, null, [[0, 27]]);
 }
 
 function handleUpdate(e) {
