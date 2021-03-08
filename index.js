@@ -46,9 +46,10 @@ app.get('/map', function (req, res) {
     const { mapId } = req.query;
 
     if (user) {
+        //db
         res.render('pages/map', { mapId });
     } else {
-        res.redirect(`/login?mapId=${mapId}`)
+        res.redirect(`/login?mapId=${mapId}`);
     }
 
 

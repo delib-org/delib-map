@@ -20,7 +20,7 @@ exports.createMap = async (req, res) => {
 
         if (!newMapName) throw new Error('no name in the req')
 
-       
+
 
         const newMap = new Map({ creator, name: newMapName, creationDate: Date.now() })
 
@@ -34,8 +34,23 @@ exports.createMap = async (req, res) => {
     }
 }
 
-exports.getMaps = async (req, res)=>{
-    const maps = await Map.find({name:{ $exists: true}});
+exports.getMaps = async (req, res) => {
+    const maps = await Map.find({ name: { $exists: true } });
 
-    res.send({maps})
+    res.send({ maps })
+}
+
+exports.getMap = async (req, res) => {
+    const { mapId } = req.query;
+    console.log('mapId', mapId);
+
+    if (mapId) {
+        const map = await Map.findById(mapId);
+        console.log(map)
+        res.send({ ok: true, mapId, map })
+    } else {
+        res.send({mapId})
+    }
+
+   
 }

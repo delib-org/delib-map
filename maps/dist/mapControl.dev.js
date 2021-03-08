@@ -99,3 +99,44 @@ exports.getMaps = function _callee2(req, res) {
     }
   });
 };
+
+exports.getMap = function _callee3(req, res) {
+  var mapId, map;
+  return regeneratorRuntime.async(function _callee3$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          mapId = req.query.mapId;
+          console.log('mapId', mapId);
+
+          if (!mapId) {
+            _context3.next = 10;
+            break;
+          }
+
+          _context3.next = 5;
+          return regeneratorRuntime.awrap(Map.findById(mapId));
+
+        case 5:
+          map = _context3.sent;
+          console.log(map);
+          res.send({
+            ok: true,
+            mapId: mapId,
+            map: map
+          });
+          _context3.next = 11;
+          break;
+
+        case 10:
+          res.send({
+            mapId: mapId
+          });
+
+        case 11:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  });
+};

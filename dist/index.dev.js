@@ -43,6 +43,7 @@ app.get('/map', function (req, res) {
   var mapId = req.query.mapId;
 
   if (user) {
+    //db
     res.render('pages/map', {
       mapId: mapId
     });
