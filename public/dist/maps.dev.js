@@ -16,17 +16,32 @@ maps.forEach(function (map) {
 mapsRoot.innerHTML = html;
 
 function handleCreateMap() {
-  console.log('creating map');
-  fetch('/maps/createMap', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({})
-  }).then(function (r) {
-    return r.json();
-  }).then(function (data) {
-    return console.log(data);
-  });
+  try {
+    console.log('creating map');
+    var newMapName = document.getElementById('newMapName').value;
+
+    if (newMapName) {
+      fetch('/maps/createMap', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          newMapName: newMapName
+        })
+      }).then(function (r) {
+        return r.json();
+      }).then(function (data) {
+        console.log(data);
+        var mapId = data.mapId;
+
+        if (mapId) {
+          window.location.replace("/map?mapId=".concat(mapId));
+        }
+      });
+    }
+  } catch (e) {
+    console.error(e);
+  }
 }

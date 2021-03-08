@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const {mapSchema} = require('./mapSchema');
+const { mapSchema } = require('./mapSchema');
 const mongoose = require('mongoose');
 
 
@@ -10,17 +10,24 @@ exports.updateNode = (req, res) => {
 };
 
 
-exports.createMap = async (req, res)=>{
-    const creator = req.username;
+exports.createMap = async (req, res) => {
+    try {
+console.log('creating')
+        const creator = req.username;
+        const {newMapName} = req.body
 
-    const mapId = 'id_' + (new Date()).getTime();
+        if(!newMapName) throw new Error('no name in the req')
 
-    const Map = mongoose.model('Map', mapSchema);
+        const Map = mongoose.model('Map', mapSchema);
 
-    const newMap = new Map({creator, mapId})
+        const newMap = new Map({ creator, name:newMapName,creationDate:Date.now()})
 
-    const newMapDB = await newMap.save();
-   
+        const newMapDB = await newMap.save();
+        const mapId = newMapDB._id
 
-    res.send({ok:true, newMap:true,mapId, creator})
+        res.send({ ok: true, newMap: true, creator,mapId, name:newMapName });
+    } catch (e) {
+        console.log(e)
+        res.send({ error: e.message })
+    }
 }

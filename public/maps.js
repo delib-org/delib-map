@@ -9,16 +9,30 @@ maps.forEach(map => {
 mapsRoot.innerHTML = html;
 
 function handleCreateMap() {
-    console.log('creating map')
+    try {
+        console.log('creating map')
+        const newMapName = document.getElementById('newMapName').value;
 
-    fetch('/maps/createMap', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({})
-    })
-    .then(r=>r.json())
-    .then(data=>console.log(data))
+        if (newMapName) {
+
+            fetch('/maps/createMap', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ newMapName })
+            })
+                .then(r => r.json())
+                .then(data => {
+                    console.log(data);
+                    const {mapId} = data;
+                    if(mapId){
+                        window.location.replace(`/map?mapId=${mapId}`);
+                    }
+                })
+        }
+    } catch (e) {
+        console.error(e)
+    }
 }

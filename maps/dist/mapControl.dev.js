@@ -16,34 +16,59 @@ exports.updateNode = function (req, res) {
 };
 
 exports.createMap = function _callee(req, res) {
-  var creator, mapId, Map, newMap, newMapDB;
+  var creator, newMapName, _Map, newMap, newMapDB, mapId;
+
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
+          _context.prev = 0;
+          console.log('creating');
           creator = req.username;
-          mapId = 'id_' + new Date().getTime();
-          Map = mongoose.model('Map', mapSchema);
-          newMap = new Map({
-            creator: creator,
-            mapId: mapId
-          });
-          _context.next = 6;
-          return regeneratorRuntime.awrap(newMap.save());
+          newMapName = req.body.newMapName;
+
+          if (newMapName) {
+            _context.next = 6;
+            break;
+          }
+
+          throw new Error('no name in the req');
 
         case 6:
+          _Map = mongoose.model('Map', mapSchema);
+          newMap = new _Map({
+            creator: creator,
+            name: newMapName,
+            creationDate: Date.now()
+          });
+          _context.next = 10;
+          return regeneratorRuntime.awrap(newMap.save());
+
+        case 10:
           newMapDB = _context.sent;
+          mapId = newMapDB._id;
           res.send({
             ok: true,
             newMap: true,
+            creator: creator,
             mapId: mapId,
-            creator: creator
+            name: newMapName
+          });
+          _context.next = 19;
+          break;
+
+        case 15:
+          _context.prev = 15;
+          _context.t0 = _context["catch"](0);
+          console.log(_context.t0);
+          res.send({
+            error: _context.t0.message
           });
 
-        case 8:
+        case 19:
         case "end":
           return _context.stop();
       }
     }
-  });
+  }, null, null, [[0, 15]]);
 };

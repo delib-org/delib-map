@@ -13,7 +13,11 @@ var edgeSchema = new Schema({
 });
 exports.mapSchema = new Schema({
   creator: String,
-  mapId: String,
+  name: String,
+  creationDate: {
+    type: Date,
+    "default": Date.now
+  },
   nodes: [nodeSchema],
   edges: [edgeSchema],
   settings: Object
