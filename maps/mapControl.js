@@ -9,25 +9,33 @@ exports.updateNode = (req, res) => {
     res.send({ ok: true });
 };
 
+const Map = mongoose.model('Map', mapSchema);
+
 
 exports.createMap = async (req, res) => {
     try {
-console.log('creating')
+        console.log('creating')
         const creator = req.username;
-        const {newMapName} = req.body
+        const { newMapName } = req.body
 
-        if(!newMapName) throw new Error('no name in the req')
+        if (!newMapName) throw new Error('no name in the req')
 
-        const Map = mongoose.model('Map', mapSchema);
+       
 
-        const newMap = new Map({ creator, name:newMapName,creationDate:Date.now()})
+        const newMap = new Map({ creator, name: newMapName, creationDate: Date.now() })
 
         const newMapDB = await newMap.save();
         const mapId = newMapDB._id
 
-        res.send({ ok: true, newMap: true, creator,mapId, name:newMapName });
+        res.send({ ok: true, newMap: true, creator, mapId, name: newMapName });
     } catch (e) {
         console.log(e)
         res.send({ error: e.message })
     }
+}
+
+exports.getMaps = async (req, res)=>{
+    const maps = await Map.find({name:{ $exists: true}});
+
+    res.send({maps})
 }

@@ -1,19 +1,21 @@
 "use strict";
 
-var maps = [{
-  mapId: 1,
-  name: 'first map'
-}, {
-  mapId: 2,
-  name: 'second map'
-}];
 var mapsRoot = document.getElementById('mapsRoot');
-var html = '';
-maps.forEach(function (map) {
-  console.log(map);
-  html += "<p>map name: ".concat(map.name, "</p>");
-});
-mapsRoot.innerHTML = html;
+
+function renderMaps(maps) {
+  var html = '';
+  maps.forEach(function (map) {
+    console.log(map);
+    html += "<p><a href=\"/map?mapId=".concat(map._id, "\">Map: ").concat(map.name, "</a></p>");
+  });
+  mapsRoot.innerHTML = html;
+}
+
+function renderNewMap(map) {
+  var beforeHtml = mapsRoot.innerHTML;
+  html = "<p><a href=\"/map?mapId=".concat(map._id, "\">map name: ").concat(map.name, "</a></p>") + beforeHtml;
+  mapsRoot.innerHTML = html;
+}
 
 function handleCreateMap() {
   try {
@@ -45,3 +47,17 @@ function handleCreateMap() {
     console.error(e);
   }
 }
+
+function getMaps() {
+  fetch('/maps/get-all-maps').then(function (r) {
+    return r.json();
+  }).then(function (_ref) {
+    var maps = _ref.maps;
+
+    if (maps) {
+      renderMaps(maps);
+    }
+  });
+}
+
+getMaps();

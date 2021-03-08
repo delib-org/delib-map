@@ -15,9 +15,10 @@ exports.updateNode = function (req, res) {
   });
 };
 
-exports.createMap = function _callee(req, res) {
-  var creator, newMapName, _Map, newMap, newMapDB, mapId;
+var Map = mongoose.model('Map', mapSchema);
 
+exports.createMap = function _callee(req, res) {
+  var creator, newMapName, newMap, newMapDB, mapId;
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
@@ -35,16 +36,15 @@ exports.createMap = function _callee(req, res) {
           throw new Error('no name in the req');
 
         case 6:
-          _Map = mongoose.model('Map', mapSchema);
-          newMap = new _Map({
+          newMap = new Map({
             creator: creator,
             name: newMapName,
             creationDate: Date.now()
           });
-          _context.next = 10;
+          _context.next = 9;
           return regeneratorRuntime.awrap(newMap.save());
 
-        case 10:
+        case 9:
           newMapDB = _context.sent;
           mapId = newMapDB._id;
           res.send({
@@ -54,21 +54,48 @@ exports.createMap = function _callee(req, res) {
             mapId: mapId,
             name: newMapName
           });
-          _context.next = 19;
+          _context.next = 18;
           break;
 
-        case 15:
-          _context.prev = 15;
+        case 14:
+          _context.prev = 14;
           _context.t0 = _context["catch"](0);
           console.log(_context.t0);
           res.send({
             error: _context.t0.message
           });
 
-        case 19:
+        case 18:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[0, 15]]);
+  }, null, null, [[0, 14]]);
+};
+
+exports.getMaps = function _callee2(req, res) {
+  var maps;
+  return regeneratorRuntime.async(function _callee2$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.next = 2;
+          return regeneratorRuntime.awrap(Map.find({
+            name: {
+              $exists: true
+            }
+          }));
+
+        case 2:
+          maps = _context2.sent;
+          res.send({
+            maps: maps
+          });
+
+        case 4:
+        case "end":
+          return _context2.stop();
+      }
+    }
+  });
 };

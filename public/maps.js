@@ -1,12 +1,24 @@
-let maps = [{ mapId: 1, name: 'first map' }, { mapId: 2, name: 'second map' }]
 const mapsRoot = document.getElementById('mapsRoot');
 
-let html = ''
-maps.forEach(map => {
-    console.log(map)
-    html += `<p>map name: ${map.name}</p>`
-})
-mapsRoot.innerHTML = html;
+function renderMaps(maps) {
+
+   
+
+    let html = ''
+    maps.forEach(map => {
+        console.log(map)
+        html += `<p><a href="/map?mapId=${map._id}">Map: ${map.name}</a></p>`
+    })
+    mapsRoot.innerHTML = html;
+}
+
+function renderNewMap(map){
+    
+    let beforeHtml = mapsRoot.innerHTML;
+    html = `<p><a href="/map?mapId=${map._id}">map name: ${map.name}</a></p>`+ beforeHtml;
+    mapsRoot.innerHTML = html;
+}
+
 
 function handleCreateMap() {
     try {
@@ -26,8 +38,8 @@ function handleCreateMap() {
                 .then(r => r.json())
                 .then(data => {
                     console.log(data);
-                    const {mapId} = data;
-                    if(mapId){
+                    const { mapId } = data;
+                    if (mapId) {
                         window.location.replace(`/map?mapId=${mapId}`);
                     }
                 })
@@ -36,3 +48,17 @@ function handleCreateMap() {
         console.error(e)
     }
 }
+
+function getMaps() {
+    fetch('/maps/get-all-maps')
+        .then(r => r.json())
+        .then(({ maps }) => {
+            if (maps) {
+                renderMaps(maps)
+            }
+        })
+}
+
+
+
+getMaps()
