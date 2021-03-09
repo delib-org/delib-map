@@ -93,10 +93,6 @@ body {
   direction: ltr;
 }
 
-body {
-  direction: rtl;
-}
-
 /* ------ page----------- */
 .page {
   width: 100%;
