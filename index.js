@@ -58,9 +58,6 @@ app.get('/map', function (req, res) {
 
 //static
 app.use(express.static(__dirname + '/public'));
-console.log(__dirname)
-
-
 
 //routers
 const mapsRoute = require("./maps/mapRoute");
@@ -90,33 +87,33 @@ const Map = mongoose.model('Map', mapSchema);
 
 io.on('connection', socket => {
 
-    console.log('a user connected');
+  
 
     socket.on('node update', async mapObj => {
         const { mapId, updatedNode } = mapObj;
 
-        console.log(updatedNode)
+       
         io.emit('node update', updatedNode);
         const map = await Map.updateOne(
             { 'nodes._id': updatedNode._id },
             { $set: { 'nodes.$': updatedNode } },
             { arrayFilters: [{ 'nodes.id': updatedNode.id }] }
         )
-        console.log('map updated:', map.n)
+       
     });
 
     socket.on('node create', node => {
-        console.log(node);
+ 
         io.emit('node create', node);
     });
 
     socket.on('edge create', async edge => {
         try {
-            console.log(edge);
+         
             const { mapId } = edge;
 
             let map = await Map.updateOne({ _id: mapId }, { $push: { edges: edge } });
-            console.log(map.n)
+          
             io.emit('edge create', edge);
         } catch (e) {
             console.error(e)
@@ -125,7 +122,7 @@ io.on('connection', socket => {
 
     socket.on('edge delete', async ({ mapId, edgeId }) => {
         try {
-            console.log('edge delete:', edgeId, mapId);
+           
 
 
             let map = await Map.updateOne(

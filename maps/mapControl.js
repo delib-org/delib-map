@@ -11,7 +11,7 @@ const Map = mongoose.model('Map', mapSchema);
 
 exports.createMap = async (req, res) => {
     try {
-        console.log('creating')
+      
         const creator = req.username;
         const { newMapName } = req.body
 
@@ -26,7 +26,7 @@ exports.createMap = async (req, res) => {
 
         res.send({ ok: true, newMap: true, creator, mapId, name: newMapName });
     } catch (e) {
-        console.log(e)
+        console.error(e)
         res.send({ error: e.message })
     }
 }
@@ -39,11 +39,11 @@ exports.getMaps = async (req, res) => {
 
 exports.getMap = async (req, res) => {
     const { mapId } = req.query;
-    console.log('mapId', mapId);
+  
 
     if (mapId) {
         const map = await Map.findById(mapId);
-        console.log(map)
+      
         res.send({ ok: true, mapId, map })
     } else {
         res.send({ mapId })
@@ -61,14 +61,11 @@ exports.createNode = async (req, res) => {
         if(!mapId) throw new Error('no mapId in body');
         if(!node) throw new Error('no nodeId in body');
 
-        console.log(mapId);
-        console.log(node)
-
         const map = await Map.updateOne({_id:mapId},{$push:{nodes:node}})
         res.send({map});
 
     } catch (e) {
-        console.log(e)
+        console.error(e)
         res.send({ error: e.message })
     }
 }

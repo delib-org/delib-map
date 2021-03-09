@@ -1,5 +1,3 @@
-console.log('main');
-
 const socket = io();
 
 const editBox = document.getElementById('editBox');
@@ -65,13 +63,9 @@ async function renderMap() {
         const r = await fetch(`/maps/get-map?mapId=${mapId}`);
         const { map } = await r.json();
 
-        console.log(map)
-
         if (!map) throw new Error('DB didnt returned a map')
 
         const { nodes, edges } = map;
-
-        console.log(nodes, edges)
 
         // create an array with nodes
         var nodesDS = new vis.DataSet(nodes);
@@ -102,12 +96,12 @@ async function renderMap() {
 
 
         network.on('click', e => {
-            console.log('click')
+
             const { nodes, edges } = e;
 
             //if clicked on empty screen, hide editBox
             if (edges.length === 0 && nodes.length === 0) {
-                console.log('hide')
+
                 editBox.style.display = 'none';
                 deleteEdge.style.display = 'none'
             }
@@ -115,9 +109,9 @@ async function renderMap() {
         })
 
         network.on('hold', e => {
-            console.log(e)
+
             const { edges, nodes } = e;
-            console.log(edges, nodes)
+
             if (edges.length === 0 && nodes.length === 0) {
                 const nodeId = `id${Math.random().toString(16).slice(2)}`;
                 const mapId = getMapId();
@@ -133,8 +127,6 @@ async function renderMap() {
 
         network.on('selectNode', e => {
             const { nodes, pointer } = e;
-            console.log('selectNode');
-            console.log(e)
 
             editBox.style.display = 'block'
 
@@ -156,7 +148,7 @@ async function renderMap() {
                 //connect to
                 setConnectNodes({ toNew: nodeId });
                 const edgeId = data.edges.add({ from, to: nodeId })[0];
-                socket.emit('edge create', { mapId, from, to: nodeId ,id:edgeId })
+                socket.emit('edge create', { mapId, from, to: nodeId, id: edgeId })
 
             } else {
                 //set new from-node
@@ -169,8 +161,6 @@ async function renderMap() {
         })
 
         network.on('selectEdge', e => {
-            console.log('selectEdge')
-            console.log(e)
 
             const { edges, pointer } = e;
 
@@ -200,10 +190,10 @@ async function renderMap() {
 
         socket.on('edge create', edge => {
             try {
-                console.log(setConnectNodes({}))
+
                 const { from, to } = setConnectNodes({});
                 if (from == edge.from && to === edge.to) {
-                    console.log('skip')
+
                 } else {
                     data.edges.add(edge);
                 }
@@ -213,7 +203,7 @@ async function renderMap() {
             }
         })
 
-        socket.on('edge delete', edgeId =>{
+        socket.on('edge delete', edgeId => {
             data.edges.remove(edgeId);
         })
 
@@ -226,14 +216,11 @@ async function renderMap() {
 
 
 function handleUpdate(e) {
-    console.log(e)
+
     e.preventDefault();
 
     const nodeName = document.getElementById('nodeName').value;
     const nodeId = editForm.dataset.nodeId;
-
-    console.log(nodeId, nodeName);
-    console.log(typeof nodeName)
 
     data.nodes.updateOnly({ id: nodeId, label: nodeName });
     document.getElementById('nodeName').value = '';
@@ -250,10 +237,6 @@ function handleUpdate(e) {
 
 function closeEditBox(e) {
     e.stopPropagation();
-    console.log(e)
-
-
-    console.log('closeEditBox')
 
     const icon = document.getElementById('linkFavIcon')
     let iconText = icon.innerText;
@@ -266,7 +249,7 @@ function closeEditBox(e) {
 
 
 function createNode(mapId, node) {
-    console.log(node)
+
     fetch('/maps/createNode', {
         method: 'POST',
         headers: {
@@ -277,7 +260,7 @@ function createNode(mapId, node) {
     })
         .then(r => r.json())
         .then(data => {
-            console.log(data)
+            console.info(data)
         })
         .catch(e => console.error(e))
 }
@@ -288,7 +271,7 @@ function connectNodesEvent(e) {
     e.stopPropagation()
     const icon = document.getElementById('linkFavIcon')
     let iconText = icon.innerText;
-    console.log(iconText)
+
     if (iconText == 'link') {
         icon.innerText = 'link_off';
         linkFav.style.background = 'var(--accent)'
@@ -304,11 +287,9 @@ function connectNodesEvent(e) {
 function deleteEdgeFn(e) {
     e.stopPropagation()
 
-    console.log('delete')
+
     const edgeId = deleteEdge.dataset.edgeId;
     const mapId = getMapId();
-    console.log(edgeId);
-   
 
     deleteEdge.style.display = 'none';
 

@@ -18,27 +18,26 @@ exports.createMap = function _callee(req, res) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.prev = 0;
-          console.log('creating');
           creator = req.username;
           newMapName = req.body.newMapName;
 
           if (newMapName) {
-            _context.next = 6;
+            _context.next = 5;
             break;
           }
 
           throw new Error('no name in the req');
 
-        case 6:
+        case 5:
           newMap = new Map({
             creator: creator,
             name: newMapName,
             creationDate: Date.now()
           });
-          _context.next = 9;
+          _context.next = 8;
           return regeneratorRuntime.awrap(newMap.save());
 
-        case 9:
+        case 8:
           newMapDB = _context.sent;
           mapId = newMapDB._id;
           res.send({
@@ -48,23 +47,23 @@ exports.createMap = function _callee(req, res) {
             mapId: mapId,
             name: newMapName
           });
-          _context.next = 18;
+          _context.next = 17;
           break;
 
-        case 14:
-          _context.prev = 14;
+        case 13:
+          _context.prev = 13;
           _context.t0 = _context["catch"](0);
-          console.log(_context.t0);
+          console.error(_context.t0);
           res.send({
             error: _context.t0.message
           });
 
-        case 18:
+        case 17:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[0, 14]]);
+  }, null, null, [[0, 13]]);
 };
 
 exports.getMaps = function _callee2(req, res) {
@@ -101,33 +100,31 @@ exports.getMap = function _callee3(req, res) {
       switch (_context3.prev = _context3.next) {
         case 0:
           mapId = req.query.mapId;
-          console.log('mapId', mapId);
 
           if (!mapId) {
-            _context3.next = 10;
+            _context3.next = 8;
             break;
           }
 
-          _context3.next = 5;
+          _context3.next = 4;
           return regeneratorRuntime.awrap(Map.findById(mapId));
 
-        case 5:
+        case 4:
           map = _context3.sent;
-          console.log(map);
           res.send({
             ok: true,
             mapId: mapId,
             map: map
           });
-          _context3.next = 11;
+          _context3.next = 9;
           break;
 
-        case 10:
+        case 8:
           res.send({
             mapId: mapId
           });
 
-        case 11:
+        case 9:
         case "end":
           return _context3.stop();
       }
@@ -162,9 +159,7 @@ exports.createNode = function _callee4(req, res) {
           throw new Error('no nodeId in body');
 
         case 6:
-          console.log(mapId);
-          console.log(node);
-          _context4.next = 10;
+          _context4.next = 8;
           return regeneratorRuntime.awrap(Map.updateOne({
             _id: mapId
           }, {
@@ -173,28 +168,28 @@ exports.createNode = function _callee4(req, res) {
             }
           }));
 
-        case 10:
+        case 8:
           map = _context4.sent;
           res.send({
             map: map
           });
-          _context4.next = 18;
+          _context4.next = 16;
           break;
 
-        case 14:
-          _context4.prev = 14;
+        case 12:
+          _context4.prev = 12;
           _context4.t0 = _context4["catch"](0);
-          console.log(_context4.t0);
+          console.error(_context4.t0);
           res.send({
             error: _context4.t0.message
           });
 
-        case 18:
+        case 16:
         case "end":
           return _context4.stop();
       }
     }
-  }, null, null, [[0, 14]]);
+  }, null, null, [[0, 12]]);
 };
 
 exports.updateNode = function (req, res) {

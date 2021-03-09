@@ -1,8 +1,5 @@
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-console.log('main');
 var socket = io();
 var editBox = document.getElementById('editBox');
 var editForm = document.getElementById('editForm');
@@ -90,18 +87,16 @@ function renderMap() {
         case 9:
           _ref3 = _context.sent;
           map = _ref3.map;
-          console.log(map);
 
           if (map) {
-            _context.next = 14;
+            _context.next = 13;
             break;
           }
 
           throw new Error('DB didnt returned a map');
 
-        case 14:
-          nodes = map.nodes, edges = map.edges;
-          console.log(nodes, edges); // create an array with nodes
+        case 13:
+          nodes = map.nodes, edges = map.edges; // create an array with nodes
 
           nodesDS = new vis.DataSet(nodes); // create an array with edges
 
@@ -125,21 +120,17 @@ function renderMap() {
           };
           network = new vis.Network(container, data, options);
           network.on('click', function (e) {
-            console.log('click');
             var nodes = e.nodes,
                 edges = e.edges; //if clicked on empty screen, hide editBox
 
             if (edges.length === 0 && nodes.length === 0) {
-              console.log('hide');
               editBox.style.display = 'none';
               deleteEdge.style.display = 'none';
             }
           });
           network.on('hold', function (e) {
-            console.log(e);
             var edges = e.edges,
                 nodes = e.nodes;
-            console.log(edges, nodes);
 
             if (edges.length === 0 && nodes.length === 0) {
               var nodeId = "id".concat(Math.random().toString(16).slice(2));
@@ -158,8 +149,6 @@ function renderMap() {
           network.on('selectNode', function (e) {
             var nodes = e.nodes,
                 pointer = e.pointer;
-            console.log('selectNode');
-            console.log(e);
             editBox.style.display = 'block';
             editBox.style.top = "".concat(pointer.DOM.y + 120, "px");
             editBox.style.left = "".concat(pointer.DOM.x, "px");
@@ -198,8 +187,6 @@ function renderMap() {
             console.dir(editForm);
           });
           network.on('selectEdge', function (e) {
-            console.log('selectEdge');
-            console.log(e);
             var edges = e.edges,
                 pointer = e.pointer;
             var edgeId = edges[0];
@@ -223,15 +210,11 @@ function renderMap() {
           });
           socket.on('edge create', function (edge) {
             try {
-              console.log(setConnectNodes({}));
-
               var _setConnectNodes2 = setConnectNodes({}),
                   from = _setConnectNodes2.from,
                   to = _setConnectNodes2.to;
 
-              if (from == edge.from && to === edge.to) {
-                console.log('skip');
-              } else {
+              if (from == edge.from && to === edge.to) {} else {
                 data.edges.add(edge);
               }
             } catch (e) {
@@ -241,29 +224,26 @@ function renderMap() {
           socket.on('edge delete', function (edgeId) {
             data.edges.remove(edgeId);
           });
-          _context.next = 35;
+          _context.next = 33;
           break;
 
-        case 32:
-          _context.prev = 32;
+        case 30:
+          _context.prev = 30;
           _context.t0 = _context["catch"](0);
           console.error(_context.t0);
 
-        case 35:
+        case 33:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[0, 32]]);
+  }, null, null, [[0, 30]]);
 }
 
 function handleUpdate(e) {
-  console.log(e);
   e.preventDefault();
   var nodeName = document.getElementById('nodeName').value;
   var nodeId = editForm.dataset.nodeId;
-  console.log(nodeId, nodeName);
-  console.log(_typeof(nodeName));
   data.nodes.updateOnly({
     id: nodeId,
     label: nodeName
@@ -282,8 +262,6 @@ function handleUpdate(e) {
 
 function closeEditBox(e) {
   e.stopPropagation();
-  console.log(e);
-  console.log('closeEditBox');
   var icon = document.getElementById('linkFavIcon');
   var iconText = icon.innerText;
   icon.innerText = 'link';
@@ -295,7 +273,6 @@ function closeEditBox(e) {
 }
 
 function createNode(mapId, node) {
-  console.log(node);
   fetch('/maps/createNode', {
     method: 'POST',
     headers: {
@@ -309,7 +286,7 @@ function createNode(mapId, node) {
   }).then(function (r) {
     return r.json();
   }).then(function (data) {
-    console.log(data);
+    console.info(data);
   })["catch"](function (e) {
     return console.error(e);
   });
@@ -319,7 +296,6 @@ function connectNodesEvent(e) {
   e.stopPropagation();
   var icon = document.getElementById('linkFavIcon');
   var iconText = icon.innerText;
-  console.log(iconText);
 
   if (iconText == 'link') {
     icon.innerText = 'link_off';
@@ -338,10 +314,8 @@ function connectNodesEvent(e) {
 
 function deleteEdgeFn(e) {
   e.stopPropagation();
-  console.log('delete');
   var edgeId = deleteEdge.dataset.edgeId;
   var mapId = getMapId();
-  console.log(edgeId);
   deleteEdge.style.display = 'none';
   socket.emit('edge delete', {
     mapId: mapId,

@@ -52,8 +52,7 @@ app.get('/map', function (req, res) {
   }
 }); //static
 
-app.use(express["static"](__dirname + '/public'));
-console.log(__dirname); //routers
+app.use(express["static"](__dirname + '/public')); //routers
 
 var mapsRoute = require("./maps/mapRoute");
 
@@ -85,7 +84,6 @@ var _require2 = require('./maps/mapSchema'),
 
 var Map = mongoose.model('Map', mapSchema);
 io.on('connection', function (socket) {
-  console.log('a user connected');
   socket.on('node update', function _callee(mapObj) {
     var mapId, updatedNode, map;
     return regeneratorRuntime.async(function _callee$(_context) {
@@ -93,9 +91,8 @@ io.on('connection', function (socket) {
         switch (_context.prev = _context.next) {
           case 0:
             mapId = mapObj.mapId, updatedNode = mapObj.updatedNode;
-            console.log(updatedNode);
             io.emit('node update', updatedNode);
-            _context.next = 5;
+            _context.next = 4;
             return regeneratorRuntime.awrap(Map.updateOne({
               'nodes._id': updatedNode._id
             }, {
@@ -108,11 +105,10 @@ io.on('connection', function (socket) {
               }]
             }));
 
-          case 5:
+          case 4:
             map = _context.sent;
-            console.log('map updated:', map.n);
 
-          case 7:
+          case 5:
           case "end":
             return _context.stop();
         }
@@ -120,7 +116,6 @@ io.on('connection', function (socket) {
     });
   });
   socket.on('node create', function (node) {
-    console.log(node);
     io.emit('node create', node);
   });
   socket.on('edge create', function _callee2(edge) {
@@ -130,9 +125,8 @@ io.on('connection', function (socket) {
         switch (_context2.prev = _context2.next) {
           case 0:
             _context2.prev = 0;
-            console.log(edge);
             mapId = edge.mapId;
-            _context2.next = 5;
+            _context2.next = 4;
             return regeneratorRuntime.awrap(Map.updateOne({
               _id: mapId
             }, {
@@ -141,24 +135,23 @@ io.on('connection', function (socket) {
               }
             }));
 
-          case 5:
+          case 4:
             map = _context2.sent;
-            console.log(map.n);
             io.emit('edge create', edge);
-            _context2.next = 13;
+            _context2.next = 11;
             break;
 
-          case 10:
-            _context2.prev = 10;
+          case 8:
+            _context2.prev = 8;
             _context2.t0 = _context2["catch"](0);
             console.error(_context2.t0);
 
-          case 13:
+          case 11:
           case "end":
             return _context2.stop();
         }
       }
-    }, null, null, [[0, 10]]);
+    }, null, null, [[0, 8]]);
   });
   socket.on('edge delete', function _callee3(_ref) {
     var mapId, edgeId, map;
@@ -168,8 +161,7 @@ io.on('connection', function (socket) {
           case 0:
             mapId = _ref.mapId, edgeId = _ref.edgeId;
             _context3.prev = 1;
-            console.log('edge delete:', edgeId, mapId);
-            _context3.next = 5;
+            _context3.next = 4;
             return regeneratorRuntime.awrap(Map.updateOne({
               'edges.id': edgeId
             }, {
@@ -182,23 +174,23 @@ io.on('connection', function (socket) {
               multi: false
             }));
 
-          case 5:
+          case 4:
             map = _context3.sent;
             io.emit('edge delete', edgeId);
-            _context3.next = 12;
+            _context3.next = 11;
             break;
 
-          case 9:
-            _context3.prev = 9;
+          case 8:
+            _context3.prev = 8;
             _context3.t0 = _context3["catch"](1);
             console.error(_context3.t0);
 
-          case 12:
+          case 11:
           case "end":
             return _context3.stop();
         }
       }
-    }, null, null, [[1, 9]]);
+    }, null, null, [[1, 8]]);
   });
 });
 var port = process.env.PORT || 3002;
