@@ -62,10 +62,10 @@ app.get('/map', function (req, res) {
 app.use(express.static(__dirname + '/public'));
 
 //routers
-const mapsRoute = require("./maps/mapRoute");
+const mapsRoute = require("./routes/maps/mapRoute");
 app.use('/maps', mapsRoute);
 
-const usersRouter = require('./users/usersRoute');
+const usersRouter = require('./routes/users/usersRoute');
 app.use('/users', usersRouter);
 
 

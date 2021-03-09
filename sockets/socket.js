@@ -2,7 +2,7 @@ const { io } = require('../index');
 const mongoose = require('mongoose');
 
 
-const { mapSchema } = require('../maps/mapSchema');
+const { mapSchema } = require('../routes/maps/mapSchema');
 const Map = mongoose.model('Map', mapSchema);
 
 io.on('connection', socket => {

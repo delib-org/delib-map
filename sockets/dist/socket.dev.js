@@ -5,7 +5,7 @@ var _require = require('../index'),
 
 var mongoose = require('mongoose');
 
-var _require2 = require('../maps/mapSchema'),
+var _require2 = require('../routes/maps/mapSchema'),
     mapSchema = _require2.mapSchema;
 
 var Map = mongoose.model('Map', mapSchema);
