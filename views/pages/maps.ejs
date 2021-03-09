@@ -1,0 +1,26 @@
+<html lang="en">
+
+<head>
+    <%- include('../components/head'); %>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include('../components/header'); %>
+    </header>
+
+    <main>
+        Maps
+        <input type='text' placeholder="New Map Name" id='newMapName'/>
+        <button onclick='handleCreateMap()'>Creat a new map</button>
+        <div id='mapsRoot'/>
+    </main>
+
+    <footer>
+        <%- include('../components/footer'); %>
+    </footer>
+    <script src='maps.js'></script>
+</body>
+
+</html>

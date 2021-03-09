@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../components/head'); %>
+        <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include('../components/header'); %>
+
+    </header>
+
+    <main>
+        <div id="mynetwork"></div>
+        <div id='editBox' class="box">
+            <form id='editForm'>
+                <input type="text" placeholder="Node name" name='nodeName' id='nodeName'>
+            </form>
+            <div class="buttons__box">
+                <button class="buttons buttons--cancel" onclick='closeEditBox(event)'>Close</button>
+                <button class="buttons" type='submit' onclick='handleUpdate(event)'>Update</input>
+            </div>
+            <div class="buttons__box">
+                <div id='linkFav' class="fav fav--small">
+                    <span id='linkFavIcon' class="material-icons">
+                        link
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="deleteEdge" id='deleteEdge'>
+            <div class="fav fav--small">
+                <span id='linkFavIcon' class="material-icons">
+                    delete
+                </span>
+            </div>
+        </div>
+        <script src="main.js"></script>
+    </main>
+
+    <footer>
+        <%- include('../components/footer'); %>
+    </footer>
+
+</body>
+
+</html>
