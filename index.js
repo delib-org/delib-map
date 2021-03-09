@@ -85,13 +85,29 @@ db.once("open", () => {
 });
 
 
+const { mapSchema } = require('./maps/mapSchema');
+const Map = mongoose.model('Map', mapSchema);
+
 io.on('connection', socket => {
 
     console.log('a user connected');
 
-    socket.on('node update', updatedNode => {
-        console.log(updatedNode);
+    socket.on('node update', async mapObj => {
+        const { mapId, updatedNode } = mapObj;
+
+        console.log(updatedNode)
         io.emit('node update', updatedNode);
+        const map = await Map.updateOne(
+            { 'nodes._id': updatedNode._id },
+            { $set: { 'nodes.$': updatedNode } },
+            { arrayFilters: [{ 'nodes.id': updatedNode.id }] }
+        )
+        console.log('map updated:', map.n)
+    });
+
+    socket.on('node create', node => {
+        console.log(node);
+        io.emit('node create', node);
     });
 
 });

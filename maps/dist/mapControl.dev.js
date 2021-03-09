@@ -9,12 +9,6 @@ var _require = require('./mapSchema'),
 
 var mongoose = require('mongoose');
 
-exports.updateNode = function (req, res) {
-  res.send({
-    ok: true
-  });
-};
-
 var Map = mongoose.model('Map', mapSchema);
 
 exports.createMap = function _callee(req, res) {
@@ -138,5 +132,73 @@ exports.getMap = function _callee3(req, res) {
           return _context3.stop();
       }
     }
+  });
+}; //Nodes 
+
+
+exports.createNode = function _callee4(req, res) {
+  var _req$body, mapId, node, map;
+
+  return regeneratorRuntime.async(function _callee4$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.prev = 0;
+          _req$body = req.body, mapId = _req$body.mapId, node = _req$body.node;
+
+          if (mapId) {
+            _context4.next = 4;
+            break;
+          }
+
+          throw new Error('no mapId in body');
+
+        case 4:
+          if (node) {
+            _context4.next = 6;
+            break;
+          }
+
+          throw new Error('no nodeId in body');
+
+        case 6:
+          console.log(mapId);
+          console.log(node);
+          _context4.next = 10;
+          return regeneratorRuntime.awrap(Map.updateOne({
+            _id: mapId
+          }, {
+            $push: {
+              nodes: node
+            }
+          }));
+
+        case 10:
+          map = _context4.sent;
+          res.send({
+            map: map
+          });
+          _context4.next = 18;
+          break;
+
+        case 14:
+          _context4.prev = 14;
+          _context4.t0 = _context4["catch"](0);
+          console.log(_context4.t0);
+          res.send({
+            error: _context4.t0.message
+          });
+
+        case 18:
+        case "end":
+          return _context4.stop();
+      }
+    }
+  }, null, null, [[0, 14]]);
+};
+
+exports.updateNode = function (req, res) {
+  res.send({
+    ok: true
   });
 };

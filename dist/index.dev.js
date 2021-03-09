@@ -79,11 +79,49 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function () {
   console.log("we are connected to DB");
 });
+
+var _require2 = require('./maps/mapSchema'),
+    mapSchema = _require2.mapSchema;
+
+var Map = mongoose.model('Map', mapSchema);
 io.on('connection', function (socket) {
   console.log('a user connected');
-  socket.on('node update', function (updatedNode) {
-    console.log(updatedNode);
-    io.emit('node update', updatedNode);
+  socket.on('node update', function _callee(mapObj) {
+    var mapId, updatedNode, map;
+    return regeneratorRuntime.async(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            mapId = mapObj.mapId, updatedNode = mapObj.updatedNode;
+            console.log(updatedNode);
+            io.emit('node update', updatedNode);
+            _context.next = 5;
+            return regeneratorRuntime.awrap(Map.updateOne({
+              'nodes._id': updatedNode._id
+            }, {
+              $set: {
+                'nodes.$': updatedNode
+              }
+            }, {
+              arrayFilters: [{
+                'nodes.id': updatedNode.id
+              }]
+            }));
+
+          case 5:
+            map = _context.sent;
+            console.log('map updated:', map.n);
+
+          case 7:
+          case "end":
+            return _context.stop();
+        }
+      }
+    });
+  });
+  socket.on('node create', function (node) {
+    console.log(node);
+    io.emit('node create', node);
   });
 });
 var port = process.env.PORT || 3002;

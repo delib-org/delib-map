@@ -4,10 +4,7 @@ const { mapSchema } = require('./mapSchema');
 const mongoose = require('mongoose');
 
 
-exports.updateNode = (req, res) => {
 
-    res.send({ ok: true });
-};
 
 const Map = mongoose.model('Map', mapSchema);
 
@@ -49,8 +46,34 @@ exports.getMap = async (req, res) => {
         console.log(map)
         res.send({ ok: true, mapId, map })
     } else {
-        res.send({mapId})
+        res.send({ mapId })
     }
 
-   
+
 }
+
+//Nodes 
+
+exports.createNode = async (req, res) => {
+    try {
+
+        const { mapId, node } = req.body;
+        if(!mapId) throw new Error('no mapId in body');
+        if(!node) throw new Error('no nodeId in body');
+
+        console.log(mapId);
+        console.log(node)
+
+        const map = await Map.updateOne({_id:mapId},{$push:{nodes:node}})
+        res.send({map});
+
+    } catch (e) {
+        console.log(e)
+        res.send({ error: e.message })
+    }
+}
+
+exports.updateNode = (req, res) => {
+
+    res.send({ ok: true });
+};

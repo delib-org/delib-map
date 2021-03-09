@@ -2,6 +2,8 @@ console.log('main');
 
 const socket = io();
 
+let data;
+
 renderMap();
 
 function getMapId() {
@@ -18,11 +20,13 @@ async function renderMap() {
         if (!mapId) throw new Error('no map id in URL')
 
         const r = await fetch(`/maps/get-map?mapId=${mapId}`);
-        const {map} = await r.json()
+        const { map } = await r.json();
 
-        if(!map) throw new Error('DB didnt returned a map')
+        console.log(map)
 
-        const {nodes, edges} = map;
+        if (!map) throw new Error('DB didnt returned a map')
+
+        const { nodes, edges } = map;
 
         console.log(nodes, edges)
 
@@ -36,7 +40,7 @@ async function renderMap() {
 
         // create a network
         var container = document.getElementById("mynetwork");
-        var data = {
+        data = {
             nodes: nodesDS,
             edges: edgesDS,
         };
@@ -55,7 +59,7 @@ async function renderMap() {
 
 
         network.on('click', e => {
-            console.log(e)
+            console.log('click')
             const { pointer } = e;
             // console.log(pointer)
 
@@ -69,6 +73,21 @@ async function renderMap() {
             // })
 
 
+        })
+
+        network.on('hold', e => {
+            console.log(e)
+            const { edges, nodes } = e;
+            console.log(edges, nodes)
+            if (edges.length === 0 && nodes.length === 0) {
+                const nodeId = `id${Math.random().toString(16).slice(2)}`;
+                const mapId = getMapId();
+                const node = { id: nodeId, label: 'test' }
+                data.nodes.add([node]);
+
+                createNode(mapId, node);
+                socket.emit('node create', node)
+            }
         })
 
 
@@ -94,6 +113,21 @@ async function renderMap() {
 
 
         })
+
+        socket.on('node update', updatedNode => {
+            data.nodes.updateOnly({ id: updatedNode.id, label: updatedNode.label });
+        })
+
+        socket.on('node create', node => {
+            try {
+                data.nodes.add(node);
+            } catch (e) {
+
+                console.error(e.message)
+            }
+        })
+
+
     } catch (e) {
         console.error(e)
     }
@@ -106,7 +140,7 @@ function handleUpdate(e) {
     e.preventDefault();
 
     const nodeName = e.target.children.nodeName.value;
-    const nodeId = parseInt(e.target.dataset.nodeId);
+    const nodeId = e.target.dataset.nodeId;
 
     console.log(nodeId, nodeName);
     console.log(typeof nodeName)
@@ -118,11 +152,27 @@ function handleUpdate(e) {
     //update on other clients
     //get item
     let updatedNode = data.nodes.get(nodeId);
+    const mapId = getMapId();
 
-    socket.emit('node update', updatedNode)
+    socket.emit('node update', { mapId, updatedNode })
 
 }
 
-socket.on('node update', updatedNode => {
-    data.nodes.updateOnly({ id: updatedNode.id, label: updatedNode.label });
-})
+
+
+function createNode(mapId, node) {
+    console.log(node)
+    fetch('/maps/createNode', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ mapId, node })
+    })
+        .then(r => r.json())
+        .then(data => {
+            console.log(data)
+        })
+        .catch(e => console.error(e))
+}
