@@ -2,7 +2,44 @@ console.log('main');
 
 const socket = io();
 
+const editBox = document.getElementById('editBox');
+const editForm = document.getElementById('editForm');
+const linkFav = document.getElementById('linkFav')
+
 let data;
+
+function connectNodes({ from, to, clear ,connect}) {
+    return function ({ fromNew, toNew, isClear, connectNew }) {
+
+        if (fromNew) from = fromNew;
+        if (toNew) to = toNew;
+        if (connectNew !== undefined) connect = connectNew;
+
+        if (isClear) {
+            to = null;
+            from = null;
+        }
+
+        return { from, to, connect }
+    }
+
+}
+
+//clousers
+
+const setConnectNodes = connectNodes({ from: null, to: null });
+
+//this is the way to change thenodes clouster
+//
+// setConnectNodes({fromNew:null}); --empty from
+// setConnectNodes({fromNew:'f'}); -- set new from
+// setConnectNodes({toNew:'h'}) -- set new to
+// setConnectNodes({}) -- get current nodes
+// setConnectNodes({isClear:true}) -- clear all
+
+//events
+
+linkFav.addEventListener('click', connectNodesEvent)
 
 renderMap();
 
@@ -13,8 +50,7 @@ function getMapId() {
 
 async function renderMap() {
     try {
-        const editBox = document.getElementById('editBox');
-        const editForm = document.getElementById('editForm');
+
 
         const mapId = getMapId();
         if (!mapId) throw new Error('no map id in URL')
@@ -59,8 +95,13 @@ async function renderMap() {
 
 
         network.on('click', e => {
-            console.log('click')
-            const { pointer } = e;
+            console.log('click', e)
+            const { pointer, edegs, nodes } = e;
+
+            //if clicke on empty screen, hide editBox
+            if (edges.length === 0 && nodes.length === 0) {
+                editBox.style.display = 'none'
+            }
             // console.log(pointer)
 
             // const pointerEl = document.querySelector('#pointer');
@@ -94,11 +135,11 @@ async function renderMap() {
 
         network.on('select', e => {
             const { nodes, pointer } = e;
-            console.log(e)
+            console.log('select')
 
             editBox.style.display = 'block'
 
-            editBox.style.top = `${pointer.DOM.y}px`;
+            editBox.style.top = `${pointer.DOM.y + 120}px`;
             editBox.style.left = `${pointer.DOM.x}px`;
 
 
@@ -106,10 +147,22 @@ async function renderMap() {
 
             const nodeLabel = data.nodes.get(nodeId)
 
-            console.dir(editForm)
+
 
             editForm.children.nodeName.value = nodeLabel.label;
-            editForm.dataset.nodeId = nodeId
+            editForm.dataset.nodeId = nodeId;
+            linkFav.dataset.form = nodeId;
+            const {connect, from} = setConnectNodes({});
+            if(connect){
+                //connect to
+                setConnectNodes({toNew:nodeId});
+                data.edges.add({from, to:nodeId})
+                
+            } else {
+                setConnectNodes({fromNew:nodeId});
+            }
+
+            console.dir(editForm)
 
 
         })
@@ -175,4 +228,10 @@ function createNode(mapId, node) {
             console.log(data)
         })
         .catch(e => console.error(e))
+}
+
+function connectNodesEvent() {
+    
+    console.dir(setConnectNodes({connectNew:true}))
+
 }

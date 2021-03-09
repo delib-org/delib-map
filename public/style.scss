@@ -24,7 +24,7 @@
     --gray4: #F2F2F2;
     --gray2: #D6D6D6;
     --gray1: #7C7C7C;
-    --gray0:rgb(77, 77, 77);
+    --gray0: rgb(77, 77, 77);
 
     --roundBorderSmall: 6px;
     --roundBorder: 12px;
@@ -72,7 +72,7 @@
     --gray4: #F2F2F2;
     --gray2: #D6D6D6;
     --gray1: #7C7C7C;
-    --gray0:rgb(77, 77, 77);
+    --gray0: rgb(77, 77, 77);
 
     --roundBorderSmall: 6px;
     --roundBorder: 12px;
@@ -108,13 +108,14 @@ body {
 body {
     direction: rtl;
 }
+
 /* ------ page----------- */
 .page {
     width: 100%;
     height: 100%;
 }
 
-.page__grid{
+.page__grid {
     width: 100%;
     height: 100%;
     display: grid;
@@ -122,16 +123,16 @@ body {
     overflow-y: hidden;
 }
 
-.page__header{
+.page__header {
     box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.486);
     z-index: 100;
 }
 
-.page__main{
+.page__main {
     overflow-y: auto;
 }
 
-.page__footer{
+.page__footer {
     box-shadow: 0px -3px 9px rgba(0, 0, 0, 0.486);
     z-index: 1;
 }
@@ -184,11 +185,11 @@ body {
     height: fit-content;
 }
 
-.title p{
+.title p {
     font-size: (var(--size15));
 }
 
-.title__btnRegister{
+.title__btnRegister {
     height: 32px;
     width: fit-content;
     display: flex;
@@ -201,13 +202,13 @@ body {
     transition: all 500ms;
 }
 
-.title__btnRegister--select{
+.title__btnRegister--select {
     color: white;
     border: 2px solid white;
     font-size: 1rem;
 }
 
-.title__btnRegister--unselect{
+.title__btnRegister--unselect {
     background-color: #2889d9;
     color: #ffffff45;
     border: 2px solid #ffffff45;
@@ -299,11 +300,7 @@ body {
 }
 
 /*  Buttons */
-.buttonsBox {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
+
 
 .buttons {
     width: max-content;
@@ -317,6 +314,13 @@ body {
     cursor: pointer;
     display: flex;
     align-items: center;
+
+    &__box {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding-top: 10px;
+    }
 }
 
 .buttons--small {
@@ -383,43 +387,55 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    position: fixed;
-    right: 6vw;
-    bottom: 6vh;
+    color: white;
     border-radius: 50%;
-    box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
+
     user-select: none;
     cursor: pointer;
     z-index: 200;
+    align-items: center;
+
+    &--small {
+        width: 40px;
+        height: 40px;
+    }
+
+    &--elevated {
+        box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    &--blink {
+        /* animation: name duration timing-function delay iteration-count direction fill-mode; */
+        animation: blinkFav 200ms ease-in-out 0s 35 alternate;
+    }
+
+    &>div {
+        transform: scale(1);
+        color: white;
+        text-align: center;
+        font-size: 3rem;
+        background: var(--accent);
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        position: relative;
+        left: 50%;
+        /* right: 50%; */
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
 }
 
 .fav:active {
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.fav>div {
-    transform: scale(1);
-    color: white;
-    text-align: center;
-    font-size: 3rem;
-    background: var(--accent);
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
-    position: absolute;
-    left: 50%;
-    /* right: 50%; */
-    top: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-}
 
-.fav--blink {
-    /* animation: name duration timing-function delay iteration-count direction fill-mode; */
-    animation: blinkFav 200ms ease-in-out 0s 35 alternate;
-}
+
+
 
 @keyframes blinkFav {
     from {
@@ -663,9 +679,9 @@ input[type=checkbox] {
     justify-content: center;
     flex-direction: column;
     font-size: .75rem;
-}   
+}
 
-.infoCircle{
+.infoCircle {
     width: 50px;
     height: 50px;
     border: 2px solid white;
