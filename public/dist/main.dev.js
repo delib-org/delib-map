@@ -9,7 +9,7 @@ var deleteEdge = document.getElementById('deleteEdge');
 editBox.style.display = 'none';
 linkFav.addEventListener('click', connectNodesEvent);
 deleteEdge.addEventListener('click', deleteEdgeFn);
-var data;
+var data; //clouser for nodes and edges
 
 function connectNodes(_ref) {
   var from = _ref.from,
@@ -36,8 +36,7 @@ function connectNodes(_ref) {
       connect: connect
     };
   };
-} //clousers
-
+}
 
 var setConnectNodes = connectNodes({
   from: null,
@@ -51,21 +50,15 @@ var setConnectNodes = connectNodes({
 // setConnectNodes({isClear:true}) -- clear all
 //events
 
-renderMap();
-
-function getMapId() {
-  var urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('mapId');
-}
-
-function renderMap() {
+(function _callee() {
   var mapId, r, _ref3, map, nodes, edges, nodesDS, edgesDS, container, options, network;
 
-  return regeneratorRuntime.async(function renderMap$(_context) {
+  return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.prev = 0;
+          //get data from DB
           mapId = getMapId();
 
           if (mapId) {
@@ -118,7 +111,8 @@ function renderMap() {
               shadow: true
             }
           };
-          network = new vis.Network(container, data, options);
+          network = new vis.Network(container, data, options); //network events
+
           network.on('click', function (e) {
             var nodes = e.nodes,
                 edges = e.edges; //if clicked on empty screen, hide editBox
@@ -183,8 +177,6 @@ function renderMap() {
                 fromNew: nodeId
               });
             }
-
-            console.dir(editForm);
           });
           network.on('selectEdge', function (e) {
             var edges = e.edges,
@@ -194,7 +186,8 @@ function renderMap() {
             deleteEdge.style.top = "".concat(pointer.DOM.y - 100, "px");
             deleteEdge.style.left = "".concat(pointer.DOM.x - 40, "px");
             deleteEdge.dataset.edgeId = edgeId;
-          });
+          }); //socket events
+
           socket.on('node update', function (updatedNode) {
             data.nodes.updateOnly({
               id: updatedNode.id,
@@ -238,87 +231,4 @@ function renderMap() {
       }
     }
   }, null, null, [[0, 30]]);
-}
-
-function handleUpdate(e) {
-  e.preventDefault();
-  var nodeName = document.getElementById('nodeName').value;
-  var nodeId = editForm.dataset.nodeId;
-  data.nodes.updateOnly({
-    id: nodeId,
-    label: nodeName
-  });
-  document.getElementById('nodeName').value = '';
-  editBox.style.display = 'none'; //update on other clients
-  //get item
-
-  var updatedNode = data.nodes.get(nodeId);
-  var mapId = getMapId();
-  socket.emit('node update', {
-    mapId: mapId,
-    updatedNode: updatedNode
-  });
-}
-
-function closeEditBox(e) {
-  e.stopPropagation();
-  var icon = document.getElementById('linkFavIcon');
-  var iconText = icon.innerText;
-  icon.innerText = 'link';
-  linkFav.style.background = 'var(--gray2)';
-  console.dir(setConnectNodes({
-    isClear: true
-  }));
-  editBox.style.display = 'none';
-}
-
-function createNode(mapId, node) {
-  fetch('/maps/createNode', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      mapId: mapId,
-      node: node
-    })
-  }).then(function (r) {
-    return r.json();
-  }).then(function (data) {
-    console.info(data);
-  })["catch"](function (e) {
-    return console.error(e);
-  });
-}
-
-function connectNodesEvent(e) {
-  e.stopPropagation();
-  var icon = document.getElementById('linkFavIcon');
-  var iconText = icon.innerText;
-
-  if (iconText == 'link') {
-    icon.innerText = 'link_off';
-    linkFav.style.background = 'var(--accent)';
-    console.dir(setConnectNodes({
-      connectNew: true
-    }));
-  } else {
-    icon.innerText = 'link';
-    linkFav.style.background = 'var(--gray2)';
-    console.dir(setConnectNodes({
-      connectNew: false
-    }));
-  }
-}
-
-function deleteEdgeFn(e) {
-  e.stopPropagation();
-  var edgeId = deleteEdge.dataset.edgeId;
-  var mapId = getMapId();
-  deleteEdge.style.display = 'none';
-  socket.emit('edge delete', {
-    mapId: mapId,
-    edgeId: edgeId
-  });
-}
+})();

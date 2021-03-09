@@ -2,6 +2,8 @@ const express = require('express');
 const app = express()
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+exports.io = io;
+require('./sockets/socket')
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 const bodyParser = require('body-parser');
@@ -9,69 +11,24 @@ app.use(bodyParser.json());
 
 app.set('view engine', 'ejs');
 
-// index page
-app.get('/', function (req, res) {
-    res.render('pages/index');
-});
-
-// about page
-app.get('/about', function (req, res) {
-    res.render('pages/about');
-});
-
-
-
-app.get('/login', function (req, res) {
-
-    const { mapId } = req.query;
-
-    res.render('pages/login', { mapId });
-});
-
-app.get('/maps', function (req, res) {
-    try {
-        const user = req.cookies.user;
-
-        res.render('pages/maps',);
-    } catch (e) {
-        res.redirect('/')
-    }
-});
-
-
-app.get('/map', function (req, res) {
-
-    const user = req.cookies.user;
-
-    const { mapId } = req.query;
-
-    if (user) {
-        //db
-        res.render('pages/map', { mapId });
-    } else {
-        res.redirect(`/login?mapId=${mapId}`);
-    }
-
-
-});
-
-
 //static
 app.use(express.static(__dirname + '/public'));
 
-//routers
-const mapsRoute = require("./maps/mapRoute");
+//view routes
+const viewsRoute = require('./views/routes/pagesRoute');
+app.use('/', viewsRoute)
+
+//data routers
+const mapsRoute = require("./routes/maps/mapRoute");
 app.use('/maps', mapsRoute);
 
-const usersRouter = require('./users/usersRoute');
+const usersRouter = require('./routes/users/usersRoute');
 app.use('/users', usersRouter);
 
 
 //mongooose
 const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://tal3:lqPlF8vfOm7Vd2Qt@tal-test1.m39if.mongodb.net/delib-maps', { useNewUrlParser: true, useUnifiedTopology: true });
-const { ObjectId } = require('mongodb');
-
 
 const db = mongoose.connection;
 exports.db = db;
@@ -82,65 +39,7 @@ db.once("open", () => {
 });
 
 
-const { mapSchema } = require('./maps/mapSchema');
-const Map = mongoose.model('Map', mapSchema);
-
-io.on('connection', socket => {
-
-  
-
-    socket.on('node update', async mapObj => {
-        const { mapId, updatedNode } = mapObj;
-
-       
-        io.emit('node update', updatedNode);
-        const map = await Map.updateOne(
-            { 'nodes._id': updatedNode._id },
-            { $set: { 'nodes.$': updatedNode } },
-            { arrayFilters: [{ 'nodes.id': updatedNode.id }] }
-        )
-       
-    });
-
-    socket.on('node create', node => {
- 
-        io.emit('node create', node);
-    });
-
-    socket.on('edge create', async edge => {
-        try {
-         
-            const { mapId } = edge;
-
-            let map = await Map.updateOne({ _id: mapId }, { $push: { edges: edge } });
-          
-            io.emit('edge create', edge);
-        } catch (e) {
-            console.error(e)
-        }
-    });
-
-    socket.on('edge delete', async ({ mapId, edgeId }) => {
-        try {
-           
-
-
-            let map = await Map.updateOne(
-                { 'edges.id': edgeId },
-                { $pull: { edges:{id:edgeId} } },
-                { multi: false }
-            );
-           
-            io.emit('edge delete', edgeId);
-        } catch (e) {
-            console.error(e)
-        }
-    });
-
-
-
-});
-
+//listen
 const port = process.env.PORT || 3002
 
 http.listen(port, () => {
