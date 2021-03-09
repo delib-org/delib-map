@@ -6,13 +6,13 @@ router.get('', function (req, res) {
 });
 
 // about page
-router.get('about', function (req, res) {
+router.get('/about', function (req, res) {
     res.render('pages/about');
 });
 
 
 
-router.get('login', function (req, res) {
+router.get('/login', function (req, res) {
 
     const { mapId } = req.query;
 
@@ -36,7 +36,7 @@ router.get('/map', function (req, res) {
 
 });
 
-router.get('maps', function (req, res) {
+router.get('/maps', function (req, res) {
     try {
         const user = req.cookies.user;
 

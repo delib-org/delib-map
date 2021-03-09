@@ -13,6 +13,7 @@ deleteEdge.addEventListener('click', deleteEdgeFn);
 
 let data;
 
+//clouser for nodes and edges
 function connectNodes({ from, to, clear, connect }) {
     return function ({ fromNew, toNew, isClear, connectNew }) {
 
@@ -30,7 +31,7 @@ function connectNodes({ from, to, clear, connect }) {
 
 }
 
-//clousers
+
 
 const setConnectNodes = connectNodes({ from: null, to: null });
 
@@ -45,18 +46,10 @@ const setConnectNodes = connectNodes({ from: null, to: null });
 //events
 
 
-
-renderMap();
-
-function getMapId() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('mapId');
-}
-
-async function renderMap() {
+(async () => {
     try {
 
-
+        //get data from DB
         const mapId = getMapId();
         if (!mapId) throw new Error('no mapId in URL')
 
@@ -64,7 +57,6 @@ async function renderMap() {
         const { map } = await r.json();
 
         if (!map) throw new Error('DB didnt returned a map')
-
         const { nodes, edges } = map;
 
         // create an array with nodes
@@ -72,8 +64,6 @@ async function renderMap() {
 
         // create an array with edges
         var edgesDS = new vis.DataSet(edges);
-
-
 
         // create a network
         var container = document.getElementById("mynetwork");
@@ -94,7 +84,7 @@ async function renderMap() {
         }
         const network = new vis.Network(container, data, options);
 
-
+        //network events
         network.on('click', e => {
 
             const { nodes, edges } = e;
@@ -135,14 +125,12 @@ async function renderMap() {
 
 
             const nodeId = nodes[0];
-
             const nodeLabel = data.nodes.get(nodeId)
-
-
 
             editForm.children.nodeName.value = nodeLabel.label;
             editForm.dataset.nodeId = nodeId;
             linkFav.dataset.form = nodeId;
+            
             const { connect, from } = setConnectNodes({});
             if (connect) {
                 //connect to
@@ -154,9 +142,6 @@ async function renderMap() {
                 //set new from-node
                 setConnectNodes({ fromNew: nodeId });
             }
-
-            console.dir(editForm)
-
 
         })
 
@@ -174,6 +159,9 @@ async function renderMap() {
 
 
         })
+
+
+        //socket events
 
         socket.on('node update', updatedNode => {
             data.nodes.updateOnly({ id: updatedNode.id, label: updatedNode.label });
@@ -211,88 +199,8 @@ async function renderMap() {
     } catch (e) {
         console.error(e)
     }
-}
+})()
 
 
 
-function handleUpdate(e) {
-
-    e.preventDefault();
-
-    const nodeName = document.getElementById('nodeName').value;
-    const nodeId = editForm.dataset.nodeId;
-
-    data.nodes.updateOnly({ id: nodeId, label: nodeName });
-    document.getElementById('nodeName').value = '';
-    editBox.style.display = 'none';
-
-    //update on other clients
-    //get item
-    let updatedNode = data.nodes.get(nodeId);
-    const mapId = getMapId();
-
-    socket.emit('node update', { mapId, updatedNode })
-
-}
-
-function closeEditBox(e) {
-    e.stopPropagation();
-
-    const icon = document.getElementById('linkFavIcon')
-    let iconText = icon.innerText;
-    icon.innerText = 'link';
-    linkFav.style.background = 'var(--gray2)'
-    console.dir(setConnectNodes({ isClear: true }));
-    editBox.style.display = 'none'
-}
-
-
-
-function createNode(mapId, node) {
-
-    fetch('/maps/createNode', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ mapId, node })
-    })
-        .then(r => r.json())
-        .then(data => {
-            console.info(data)
-        })
-        .catch(e => console.error(e))
-}
-
-
-
-function connectNodesEvent(e) {
-    e.stopPropagation()
-    const icon = document.getElementById('linkFavIcon')
-    let iconText = icon.innerText;
-
-    if (iconText == 'link') {
-        icon.innerText = 'link_off';
-        linkFav.style.background = 'var(--accent)'
-        console.dir(setConnectNodes({ connectNew: true }))
-    } else {
-        icon.innerText = 'link';
-        linkFav.style.background = 'var(--gray2)'
-        console.dir(setConnectNodes({ connectNew: false }))
-    }
-
-}
-
-function deleteEdgeFn(e) {
-    e.stopPropagation()
-
-
-    const edgeId = deleteEdge.dataset.edgeId;
-    const mapId = getMapId();
-
-    deleteEdge.style.display = 'none';
-
-    socket.emit('edge delete', { mapId, edgeId })
-}
 
