@@ -110,6 +110,38 @@ io.on('connection', socket => {
         io.emit('node create', node);
     });
 
+    socket.on('edge create', async edge => {
+        try {
+            console.log(edge);
+            const { mapId } = edge;
+
+            let map = await Map.updateOne({ _id: mapId }, { $push: { edges: edge } });
+            console.log(map.n)
+            io.emit('edge create', edge);
+        } catch (e) {
+            console.error(e)
+        }
+    });
+
+    socket.on('edge delete', async ({ mapId, edgeId }) => {
+        try {
+            console.log('edge delete:', edgeId, mapId);
+
+
+            let map = await Map.updateOne(
+                { 'edges.id': edgeId },
+                { $pull: { edges:{id:edgeId} } },
+                { multi: false }
+            );
+           
+            io.emit('edge delete', edgeId);
+        } catch (e) {
+            console.error(e)
+        }
+    });
+
+
+
 });
 
 const port = process.env.PORT || 3002

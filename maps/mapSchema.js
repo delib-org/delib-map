@@ -7,7 +7,8 @@ const nodeSchema = new Schema({
 })
 const edgeSchema = new Schema({
     from:String,
-    to:String
+    to:String,
+    id:String
 })
 
 

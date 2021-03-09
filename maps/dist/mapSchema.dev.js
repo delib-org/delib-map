@@ -9,7 +9,8 @@ var nodeSchema = new Schema({
 });
 var edgeSchema = new Schema({
   from: String,
-  to: String
+  to: String,
+  id: String
 });
 exports.mapSchema = new Schema({
   creator: String,

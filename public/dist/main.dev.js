@@ -7,6 +7,11 @@ var socket = io();
 var editBox = document.getElementById('editBox');
 var editForm = document.getElementById('editForm');
 var linkFav = document.getElementById('linkFav');
+var linkFavIcon = document.getElementById('linkFavIcon');
+var deleteEdge = document.getElementById('deleteEdge');
+editBox.style.display = 'none';
+linkFav.addEventListener('click', connectNodesEvent);
+deleteEdge.addEventListener('click', deleteEdgeFn);
 var data;
 
 function connectNodes(_ref) {
@@ -49,7 +54,6 @@ var setConnectNodes = connectNodes({
 // setConnectNodes({isClear:true}) -- clear all
 //events
 
-linkFav.addEventListener('click', connectNodesEvent);
 renderMap();
 
 function getMapId() {
@@ -72,7 +76,7 @@ function renderMap() {
             break;
           }
 
-          throw new Error('no map id in URL');
+          throw new Error('no mapId in URL');
 
         case 4:
           _context.next = 6;
@@ -121,21 +125,15 @@ function renderMap() {
           };
           network = new vis.Network(container, data, options);
           network.on('click', function (e) {
-            console.log('click', e);
-            var pointer = e.pointer,
-                edegs = e.edegs,
-                nodes = e.nodes; //if clicke on empty screen, hide editBox
+            console.log('click');
+            var nodes = e.nodes,
+                edges = e.edges; //if clicked on empty screen, hide editBox
 
             if (edges.length === 0 && nodes.length === 0) {
+              console.log('hide');
               editBox.style.display = 'none';
-            } // console.log(pointer)
-            // const pointerEl = document.querySelector('#pointer');
-            // pointerEl.style.top = `${pointer.DOM.y}px`;
-            // pointerEl.style.left = `${pointer.DOM.x}px`;
-            // e.nodes.forEach(node => {
-            //     data.nodes.updateOnly({ id: node, label: 'BHHOOMMEEE' })
-            // })
-
+              deleteEdge.style.display = 'none';
+            }
           });
           network.on('hold', function (e) {
             console.log(e);
@@ -157,10 +155,11 @@ function renderMap() {
               socket.emit('node create', node);
             }
           });
-          network.on('select', function (e) {
+          network.on('selectNode', function (e) {
             var nodes = e.nodes,
                 pointer = e.pointer;
-            console.log('select');
+            console.log('selectNode');
+            console.log(e);
             editBox.style.display = 'block';
             editBox.style.top = "".concat(pointer.DOM.y + 120, "px");
             editBox.style.left = "".concat(pointer.DOM.x, "px");
@@ -179,17 +178,35 @@ function renderMap() {
               setConnectNodes({
                 toNew: nodeId
               });
-              data.edges.add({
+              var edgeId = data.edges.add({
                 from: from,
                 to: nodeId
+              })[0];
+              socket.emit('edge create', {
+                mapId: mapId,
+                from: from,
+                to: nodeId,
+                id: edgeId
               });
             } else {
+              //set new from-node
               setConnectNodes({
                 fromNew: nodeId
               });
             }
 
             console.dir(editForm);
+          });
+          network.on('selectEdge', function (e) {
+            console.log('selectEdge');
+            console.log(e);
+            var edges = e.edges,
+                pointer = e.pointer;
+            var edgeId = edges[0];
+            deleteEdge.style.display = 'block';
+            deleteEdge.style.top = "".concat(pointer.DOM.y - 100, "px");
+            deleteEdge.style.left = "".concat(pointer.DOM.x - 40, "px");
+            deleteEdge.dataset.edgeId = edgeId;
           });
           socket.on('node update', function (updatedNode) {
             data.nodes.updateOnly({
@@ -204,34 +221,54 @@ function renderMap() {
               console.error(e.message);
             }
           });
-          _context.next = 32;
+          socket.on('edge create', function (edge) {
+            try {
+              console.log(setConnectNodes({}));
+
+              var _setConnectNodes2 = setConnectNodes({}),
+                  from = _setConnectNodes2.from,
+                  to = _setConnectNodes2.to;
+
+              if (from == edge.from && to === edge.to) {
+                console.log('skip');
+              } else {
+                data.edges.add(edge);
+              }
+            } catch (e) {
+              console.error(e);
+            }
+          });
+          socket.on('edge delete', function (edgeId) {
+            data.edges.remove(edgeId);
+          });
+          _context.next = 35;
           break;
 
-        case 29:
-          _context.prev = 29;
+        case 32:
+          _context.prev = 32;
           _context.t0 = _context["catch"](0);
           console.error(_context.t0);
 
-        case 32:
+        case 35:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[0, 29]]);
+  }, null, null, [[0, 32]]);
 }
 
 function handleUpdate(e) {
   console.log(e);
   e.preventDefault();
-  var nodeName = e.target.children.nodeName.value;
-  var nodeId = e.target.dataset.nodeId;
+  var nodeName = document.getElementById('nodeName').value;
+  var nodeId = editForm.dataset.nodeId;
   console.log(nodeId, nodeName);
   console.log(_typeof(nodeName));
   data.nodes.updateOnly({
     id: nodeId,
     label: nodeName
   });
-  e.target.reset();
+  document.getElementById('nodeName').value = '';
   editBox.style.display = 'none'; //update on other clients
   //get item
 
@@ -241,6 +278,20 @@ function handleUpdate(e) {
     mapId: mapId,
     updatedNode: updatedNode
   });
+}
+
+function closeEditBox(e) {
+  e.stopPropagation();
+  console.log(e);
+  console.log('closeEditBox');
+  var icon = document.getElementById('linkFavIcon');
+  var iconText = icon.innerText;
+  icon.innerText = 'link';
+  linkFav.style.background = 'var(--gray2)';
+  console.dir(setConnectNodes({
+    isClear: true
+  }));
+  editBox.style.display = 'none';
 }
 
 function createNode(mapId, node) {
@@ -264,8 +315,36 @@ function createNode(mapId, node) {
   });
 }
 
-function connectNodesEvent() {
-  console.dir(setConnectNodes({
-    connectNew: true
-  }));
+function connectNodesEvent(e) {
+  e.stopPropagation();
+  var icon = document.getElementById('linkFavIcon');
+  var iconText = icon.innerText;
+  console.log(iconText);
+
+  if (iconText == 'link') {
+    icon.innerText = 'link_off';
+    linkFav.style.background = 'var(--accent)';
+    console.dir(setConnectNodes({
+      connectNew: true
+    }));
+  } else {
+    icon.innerText = 'link';
+    linkFav.style.background = 'var(--gray2)';
+    console.dir(setConnectNodes({
+      connectNew: false
+    }));
+  }
+}
+
+function deleteEdgeFn(e) {
+  e.stopPropagation();
+  console.log('delete');
+  var edgeId = deleteEdge.dataset.edgeId;
+  var mapId = getMapId();
+  console.log(edgeId);
+  deleteEdge.style.display = 'none';
+  socket.emit('edge delete', {
+    mapId: mapId,
+    edgeId: edgeId
+  });
 }

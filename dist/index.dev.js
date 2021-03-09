@@ -123,6 +123,83 @@ io.on('connection', function (socket) {
     console.log(node);
     io.emit('node create', node);
   });
+  socket.on('edge create', function _callee2(edge) {
+    var mapId, map;
+    return regeneratorRuntime.async(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.prev = 0;
+            console.log(edge);
+            mapId = edge.mapId;
+            _context2.next = 5;
+            return regeneratorRuntime.awrap(Map.updateOne({
+              _id: mapId
+            }, {
+              $push: {
+                edges: edge
+              }
+            }));
+
+          case 5:
+            map = _context2.sent;
+            console.log(map.n);
+            io.emit('edge create', edge);
+            _context2.next = 13;
+            break;
+
+          case 10:
+            _context2.prev = 10;
+            _context2.t0 = _context2["catch"](0);
+            console.error(_context2.t0);
+
+          case 13:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, null, null, [[0, 10]]);
+  });
+  socket.on('edge delete', function _callee3(_ref) {
+    var mapId, edgeId, map;
+    return regeneratorRuntime.async(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            mapId = _ref.mapId, edgeId = _ref.edgeId;
+            _context3.prev = 1;
+            console.log('edge delete:', edgeId, mapId);
+            _context3.next = 5;
+            return regeneratorRuntime.awrap(Map.updateOne({
+              'edges.id': edgeId
+            }, {
+              $pull: {
+                edges: {
+                  id: edgeId
+                }
+              }
+            }, {
+              multi: false
+            }));
+
+          case 5:
+            map = _context3.sent;
+            io.emit('edge delete', edgeId);
+            _context3.next = 12;
+            break;
+
+          case 9:
+            _context3.prev = 9;
+            _context3.t0 = _context3["catch"](1);
+            console.error(_context3.t0);
+
+          case 12:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, null, null, [[1, 9]]);
+  });
 });
 var port = process.env.PORT || 3002;
 http.listen(port, function () {
