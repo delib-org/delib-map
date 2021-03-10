@@ -3,7 +3,8 @@ function handleUpdate(e) {
     e.preventDefault();
 
     const nodeName = document.getElementById('nodeName').value;
-    const nodeId = editForm.dataset.nodeId;
+    const {from} = networkState({});
+    const nodeId = from
 
     data.nodes.updateOnly({ id: nodeId, label: nodeName });
     document.getElementById('nodeName').value = '';

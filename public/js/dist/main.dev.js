@@ -106,13 +106,19 @@ var networkState = networkStateClouser({
           };
           options = {
             nodes: {
-              color: '#ff0000',
+              color: {
+                border: 'blue',
+                background: 'white'
+              },
+              shape: 'box',
               fixed: false,
-              font: '12px arial white',
+              font: '12px arial blue',
               scaling: {
                 label: true
               },
-              shadow: true
+              margin: 7,
+              shadow: true,
+              widthConstraint: 100
             }
           };
           network = new vis.Network(container, data, options); //network events
@@ -197,7 +203,7 @@ var networkState = networkStateClouser({
 
               var edgeId = edges[0];
               deleteEdge.style.display = 'block';
-              deleteEdge.style.top = "".concat(pointer.DOM.y - 100, "px");
+              deleteEdge.style.top = "".concat(pointer.DOM.y - 10, "px");
               deleteEdge.style.left = "".concat(pointer.DOM.x - 40, "px");
               deleteEdge.dataset.edgeId = edgeId;
               networkState({
