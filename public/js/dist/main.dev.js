@@ -116,9 +116,9 @@ var networkState = networkStateClouser({
               scaling: {
                 label: true
               },
-              margin: 7,
+              margin: 4,
               shadow: true,
-              widthConstraint: 100
+              widthConstraint: 150
             }
           };
           network = new vis.Network(container, data, options); //network events

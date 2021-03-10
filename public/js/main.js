@@ -83,9 +83,9 @@ const networkState = networkStateClouser({ from: null, to: null });
                 scaling: {
                     label: true
                 },
-                margin:7,
+                margin:4,
                 shadow: true,
-                widthConstraint: 100,
+                widthConstraint: 150,
             }
         }
         const network = new vis.Network(container, data, options);
