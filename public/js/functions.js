@@ -25,7 +25,7 @@ function closeEditBox(e) {
     let iconText = icon.innerText;
     icon.innerText = 'link';
     linkFav.style.background = 'var(--gray2)'
-    console.dir(setConnectNodes({ isClear: true }));
+    console.dir(networkState({ isClear: true, connectNew: false }));
     editBox.style.display = 'none'
 }
 
@@ -45,7 +45,7 @@ function createNode(mapId, node) {
 
 
 
-function connectNodesEvent(e) {
+function connectTheNode(e) {
     e.stopPropagation()
     const icon = document.getElementById('linkFavIcon')
     let iconText = icon.innerText;
@@ -53,11 +53,11 @@ function connectNodesEvent(e) {
     if (iconText == 'link') {
         icon.innerText = 'link_off';
         linkFav.style.background = 'var(--accent)'
-        console.dir(setConnectNodes({ connectNew: true }))
+        console.dir(networkState({ connectNew: true }))
     } else {
         icon.innerText = 'link';
         linkFav.style.background = 'var(--gray2)'
-        console.dir(setConnectNodes({ connectNew: false }))
+        console.dir(networkState({ connectNew: false }))
     }
 
 }

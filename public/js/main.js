@@ -7,18 +7,19 @@ const linkFavIcon = document.getElementById('linkFavIcon');
 const deleteEdge = document.getElementById('deleteEdge');
 editBox.style.display = 'none'
 
-linkFav.addEventListener('click', connectNodesEvent)
+linkFav.addEventListener('click', connectTheNode)
 deleteEdge.addEventListener('click', deleteEdgeFn);
 
 
 let data;
 
 //clouser for nodes and edges
-function connectNodes({ from, to, clear, connect }) {
-    return function ({ fromNew, toNew, isClear, connectNew }) {
+function networkStateClouser({ from, to, clear, edgeId, connect }) {
+    return function ({ fromNew, toNew, isClear, edgeIdNew, connectNew }) {
 
         if (fromNew) from = fromNew;
         if (toNew) to = toNew;
+        if (edgeIdNew) edgeId = edgeIdNew;
         if (connectNew !== undefined) connect = connectNew;
 
         if (isClear) {
@@ -26,22 +27,21 @@ function connectNodes({ from, to, clear, connect }) {
             from = null;
         }
 
-        return { from, to, connect }
+        return { from, to, edgeId, connect }
     }
 
 }
 
 
-
-const setConnectNodes = connectNodes({ from: null, to: null });
+const networkState = networkStateClouser({ from: null, to: null });
 
 //this is the way to change thenodes clouster
 //
-// setConnectNodes({fromNew:null}); --empty from
-// setConnectNodes({fromNew:'f'}); -- set new from
-// setConnectNodes({toNew:'h'}) -- set new to
-// setConnectNodes({}) -- get current nodes
-// setConnectNodes({isClear:true}) -- clear all
+// networkState({fromNew:null}); --empty from
+// networkState({fromNew:'f'}); -- set new from
+// networkState({toNew:'h'}) -- set new to
+// networkState({}) -- get current nodes
+// networkState({isClear:true}) -- clear all
 
 //events
 
@@ -117,30 +117,35 @@ const setConnectNodes = connectNodes({ from: null, to: null });
 
         network.on('selectNode', e => {
             const { nodes, pointer } = e;
+            const nodeId = nodes[0]
 
+            //open the edit-box
             editBox.style.display = 'block'
-
             editBox.style.top = `${pointer.DOM.y + 120}px`;
             editBox.style.left = `${pointer.DOM.x}px`;
 
 
-            const nodeId = nodes[0];
+            //get and set the node label to the form
             const nodeLabel = data.nodes.get(nodeId)
-
             editForm.children.nodeName.value = nodeLabel.label;
-            editForm.dataset.nodeId = nodeId;
-            linkFav.dataset.form = nodeId;
-            
-            const { connect, from } = setConnectNodes({});
+
+            // editForm.dataset.nodeId = nodeId;
+            // linkFav.dataset.form = nodeId;
+
+            //if connect was pressed, connect the new node
+            const { connect, from } = networkState({});
             if (connect) {
+
                 //connect to
-                setConnectNodes({ toNew: nodeId });
+                networkState({ toNew: nodeId });
                 const edgeId = data.edges.add({ from, to: nodeId })[0];
+
+                //send to server
                 socket.emit('edge create', { mapId, from, to: nodeId, id: edgeId })
 
             } else {
-                //set new from-node
-                setConnectNodes({ fromNew: nodeId });
+                //set it as a new "from"
+                networkState({ fromNew: nodeId });
             }
 
         })
@@ -149,13 +154,24 @@ const setConnectNodes = connectNodes({ from: null, to: null });
 
             const { edges, pointer } = e;
 
-            const edgeId = edges[0];
+            if (edges.length === 1) { // handle select one node
 
-            deleteEdge.style.display = 'block'
-            deleteEdge.style.top = `${pointer.DOM.y - 100}px`;
-            deleteEdge.style.left = `${pointer.DOM.x - 40}px`;
+                console.log('only on edge was selected')
+                //hide edit box
+                editBox.style.display = 'none'
 
-            deleteEdge.dataset.edgeId = edgeId;
+                //show delete button
+                const edgeId = edges[0];
+
+                deleteEdge.style.display = 'block'
+                deleteEdge.style.top = `${pointer.DOM.y - 100}px`;
+                deleteEdge.style.left = `${pointer.DOM.x - 40}px`;
+
+                deleteEdge.dataset.edgeId = edgeId;
+                networkState({ connectNew: false });
+            } else {
+                deleteEdge.style.display = 'none'
+            }
 
 
         })
@@ -179,7 +195,7 @@ const setConnectNodes = connectNodes({ from: null, to: null });
         socket.on('edge create', edge => {
             try {
 
-                const { from, to } = setConnectNodes({});
+                const { from, to } = networkState({});
                 if (from == edge.from && to === edge.to) {
 
                 } else {
