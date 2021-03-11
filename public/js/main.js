@@ -122,6 +122,7 @@ const networkState = networkStateClouser({ from: null, to: null });
 
 
         network.on('selectNode', e => {
+            console.log('selectNode')
             const { nodes, pointer } = e;
             const nodeId = nodes[0]
 
@@ -158,9 +159,9 @@ const networkState = networkStateClouser({ from: null, to: null });
 
         network.on('selectEdge', e => {
 
-            const { edges, pointer } = e;
+            const { edges, nodes, pointer } = e;
 
-            if (edges.length === 1) { // handle select one node
+            if (edges.length === 1 && nodes.length === 0) { // handle select one node
 
                 console.log('only on edge was selected')
                 //hide edit box

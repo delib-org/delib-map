@@ -151,6 +151,7 @@ var networkState = networkStateClouser({
             }
           });
           network.on('selectNode', function (e) {
+            console.log('selectNode');
             var nodes = e.nodes,
                 pointer = e.pointer;
             var nodeId = nodes[0]; //open the edit-box
@@ -193,9 +194,10 @@ var networkState = networkStateClouser({
           });
           network.on('selectEdge', function (e) {
             var edges = e.edges,
+                nodes = e.nodes,
                 pointer = e.pointer;
 
-            if (edges.length === 1) {
+            if (edges.length === 1 && nodes.length === 0) {
               // handle select one node
               console.log('only on edge was selected'); //hide edit box
 

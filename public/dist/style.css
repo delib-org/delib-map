@@ -388,6 +388,10 @@ body {
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
+#linkFav {
+  background: var(--gray2);
+}
+
 @keyframes blinkFav {
   from {
     transform: scale(1);
