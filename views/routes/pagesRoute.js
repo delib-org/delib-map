@@ -46,5 +46,28 @@ router.get('/maps', function (req, res) {
     }
 });
 
+router.get('/contracts', function (req, res) {
+    try {
+        const user = req.cookies.user;
+
+        res.render('pages/contracts',);
+    } catch (e) {
+        res.redirect('/')
+    }
+});
+
+router.get('/statements/:contractId', function (req, res) {
+
+    try {
+        const user = req.cookies.user;
+        const contractId= req.params.contractId
+
+        res.render('pages/statements',{contractId});
+    } catch (e) {
+        res.redirect('/')
+    }
+});
+
+
 
 module.exports = router;

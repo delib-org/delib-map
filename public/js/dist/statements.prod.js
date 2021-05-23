@@ -1,0 +1,1 @@
+"use strict";console.log("http://ouri-digital-agent.cf/ibc/app/אורי/".concat(contractId,"/get_statements")),axios.post("http://ouri-digital-agent.cf/ibc/app/אורי/".concat(contractId,"/get_statements"),{name:"get_statements",values:{parent:[]}}).then(function(t){var a=t.data;console.log(a)});

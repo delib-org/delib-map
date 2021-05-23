@@ -1,0 +1,31 @@
+<html lang="en">
+
+<head>
+    <%- include('../components/head'); %>
+    <link rel="stylesheet" href="../css/dist/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include('../components/header'); %>
+    </header>
+
+    <main>
+        <h1>Statements of contract: <%=contractId%></h1>
+       
+       
+        <div id='statmentsRoot' class="statments"/>
+    </main>
+
+    <footer>
+        <%- include('../components/footer'); %>
+    </footer>
+    <script>
+        const contractId = "<%=contractId%>"            
+     </script>
+    <script src='../js/statements.js'></script>
+</body>
+
+</html>

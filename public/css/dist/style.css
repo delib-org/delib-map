@@ -1,3 +1,16 @@
+.maps {
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+.maps__map {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+}
+
 :root {
   --mainBackground: #32527b;
   --subBackground: #ee7171;
@@ -290,6 +303,7 @@ body {
   justify-content: center;
   width: 100%;
   padding-top: 10px;
+  justify-content: space-evenly;
 }
 .buttons--small {
   font-size: var(--size11);
@@ -328,18 +342,6 @@ body {
   background: rgba(126, 122, 122, 0.21);
 }
 
-.confirm {
-  background: #51d051;
-}
-
-.cancel {
-  background: #e85353;
-}
-
-.negative {
-  color: red;
-}
-
 .fav {
   background: var(--halfPrimary);
   width: 60px;
@@ -357,6 +359,9 @@ body {
 .fav--small {
   width: 40px;
   height: 40px;
+}
+.fav--negative {
+  background: red;
 }
 .fav--elevated {
   box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
@@ -390,6 +395,18 @@ body {
 
 #linkFav {
   background: var(--gray2);
+}
+
+.confirm {
+  background: #51d051;
+}
+
+.cancel {
+  background: #e85353;
+}
+
+.negative {
+  color: red;
 }
 
 @keyframes blinkFav {

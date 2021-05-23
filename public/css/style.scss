@@ -1,3 +1,5 @@
+@use 'maps';
+
 :root {
     --mainBackground: #32527b;
     --subBackground: #ee7171;
@@ -317,6 +319,8 @@ body {
         justify-content: center;
         width: 100%;
         padding-top: 10px;
+        justify-content: space-evenly;
+
     }
 
     &--small {
@@ -327,13 +331,13 @@ body {
     &--cancel {
 
         background: orange;
-    
+
     }
 
     &--danger {
 
         background: red;
-    
+
     }
 
     &--nonactive {
@@ -372,17 +376,7 @@ body {
     background: rgb(126 122 122 / 21%);
 }
 
-.confirm {
-    background: #51d051;
-}
 
-.cancel {
-    background: #e85353;
-}
-
-.negative {
-    color: red;
-}
 
 .fav {
     background: var(--halfPrimary);
@@ -403,6 +397,10 @@ body {
     &--small {
         width: 40px;
         height: 40px;
+    }
+
+    &--negative{
+        background: red;
     }
 
     &--elevated {
@@ -439,11 +437,21 @@ body {
 }
 
 
-#linkFav{
-    background:var(--gray2);
+#linkFav {
+    background: var(--gray2);
 }
 
+.confirm {
+    background: #51d051;
+}
 
+.cancel {
+    background: #e85353;
+}
+
+.negative {
+    color: red;
+}
 
 
 @keyframes blinkFav {
@@ -726,7 +734,7 @@ input[type=checkbox] {
     border: 1px solid lightgray;
 }
 
-.deleteEdge{
+.deleteEdge {
     position: fixed;
     display: none;
 }

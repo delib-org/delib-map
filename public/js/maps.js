@@ -7,7 +7,7 @@ function renderMaps(maps) {
     let html = ''
     maps.forEach(map => {
         console.log(map)
-        html += `<p><a href="/map?mapId=${map._id}">Map: ${map.name}</a></p>`
+        html += `<div class='maps__map'><a href="/map?mapId=${map._id}">Map: ${map.name}</a></div>`
     })
     mapsRoot.innerHTML = html;
 }
