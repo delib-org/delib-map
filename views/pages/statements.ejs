@@ -2,8 +2,10 @@
 
 <head>
     <%- include('../components/head'); %>
-    <link rel="stylesheet" href="../css/dist/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+            integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 </head>
 
 <body class="container">
@@ -13,18 +15,29 @@
     </header>
 
     <main>
-        <h1>Statements of contract: <%=contractId%></h1>
-       
-       
-        <div id='statmentsRoot' class="statments"/>
+        <h1>Statements of contract: <%=contractId%>
+        </h1>
+
+
+        <div id='statmentsRoot' class="statments" />
     </main>
+    <div id="mynetwork"></div>
+    <div id="showStatementEditor">
+        <form onsubmit="updateStatement(event)">
+            <textarea placeholder="write your statement" name='text' class="inputs inputGeneral"></textarea>    
+            <div class="buttons">
+                <button type="submit" class="buttons__button">Update</button>
+                <div class="buttons__button buttons__button--cancel" onclick='hideEditStatement()'>Cancel</div>
+            </div>
+        </form>
+    </div>
 
     <footer>
         <%- include('../components/footer'); %>
     </footer>
     <script>
-        const contractId = "<%=contractId%>"            
-     </script>
+        const contractId = "<%=contractId%>"
+    </script>
     <script src='../js/statements.js'></script>
 </body>
 

@@ -56,14 +56,17 @@ router.get('/contracts', function (req, res) {
     }
 });
 
-router.get('/statements/:contractId', function (req, res) {
+router.get('/statements', function (req, res) {
 
     try {
         const user = req.cookies.user;
-        const contractId= req.params.contractId
+        const contractId = req.query.contractId
 
-        res.render('pages/statements',{contractId});
+        if (!contractId) throw new Error('No contract Id in query')
+
+        res.render('pages/statements', { contractId });
     } catch (e) {
+        console.error(e)
         res.redirect('/')
     }
 });

@@ -14,7 +14,7 @@ function  renderContracts(contracts){
 
     let html = '';
     contracts.forEach(contract=>{
-        html+= `<div class='card contracts__contract' ><a href='/statements/${contract.name}'>${contract.name}</a></div>`
+        html+= `<div class='card contracts__contract' ><a href='/statements?contractId=${contract.name}'>${contract.name}</a></div>`
     })
 
     contractsRoot.innerHTML = html;
