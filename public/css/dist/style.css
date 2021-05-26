@@ -75,15 +75,16 @@ body {
 }
 .nav__item {
   padding: 20px 40px;
-  background-color: #bcbcbc;
-  box-sizing: border-box;
-}
-.nav__item:hover {
-  background-color: #a3a3a3;
-  border-bottom: 1px solid gray;
 }
 .nav__link {
   width: fit-content;
+  box-sizing: content-box;
+  background-color: #bcbcbc;
+  border-bottom: 6px solid #bcbcbc;
+}
+.nav__link:hover {
+  background-color: #a3a3a3;
+  border-bottom: 6px solid gray;
 }
 
 /* ------ page----------- */

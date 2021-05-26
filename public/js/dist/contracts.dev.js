@@ -1,16 +1,11 @@
 "use strict";
 
-console.log("contracts....");
-
-function handleGetContracts() {
-  fetch('http://ouri-digital-agent.cf/ibc/app/אורי').then(function (r) {
-    return r.json();
-  }).then(function (data) {
-    console.log(data);
-    renderContracts(data);
-  });
-}
-
+// fetch('http://ouri-digital-agent.cf/ibc/app/אורי')
+//     .then(r => r.json())
+//     .then(data => {
+//         console.log(data)
+//         renderContracts(data)
+//     })
 function renderContracts(contracts) {
   var contractsRoot = document.querySelector('#contractsRoot');
   var html = '';

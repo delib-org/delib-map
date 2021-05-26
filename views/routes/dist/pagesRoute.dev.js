@@ -1,5 +1,7 @@
 "use strict";
 
+var fetch = require('node-fetch');
+
 var router = require("express").Router(); // index page
 
 
@@ -37,13 +39,43 @@ router.get('/maps', function (req, res) {
     res.redirect('/');
   }
 });
-router.get('/contracts', function (req, res) {
-  try {
-    var user = req.cookies.user;
-    res.render('pages/contracts');
-  } catch (e) {
-    res.redirect('/');
-  }
+router.get('/contracts', function _callee(req, res) {
+  var url, r, data;
+  return regeneratorRuntime.async(function _callee$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _context.prev = 0;
+          url = 'http://ouri-digital-agent.cf/ibc/app/אורי';
+          url = encodeURI(url);
+          _context.next = 5;
+          return regeneratorRuntime.awrap(fetch(url));
+
+        case 5:
+          r = _context.sent;
+          _context.next = 8;
+          return regeneratorRuntime.awrap(r.json());
+
+        case 8:
+          data = _context.sent;
+          res.render('pages/contracts', {
+            contracts: data
+          });
+          _context.next = 16;
+          break;
+
+        case 12:
+          _context.prev = 12;
+          _context.t0 = _context["catch"](0);
+          console.log(_context.t0);
+          res.redirect('/');
+
+        case 16:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, null, null, [[0, 12]]);
 });
 router.get('/statements', function (req, res) {
   try {

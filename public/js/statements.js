@@ -1,10 +1,4 @@
-function state(info) {
-    let { network } = info
-    function inFun() {
-        return { network }
-    }
-    return { network }
-}
+const statements = {selectedNodes:[]};
 
 (async () => {
 
@@ -12,13 +6,37 @@ function state(info) {
     const { data } = await axios.post(`http://ouri-digital-agent.cf/ibc/app/אורי/${contractId}/get_statements`, {
         "name": "get_statements",
         "values": { "parent": [] }
-    })
+    });
     console.log(data)
 
     convertAllStatments(data);
+
+    document.addEventListener('keyup', e => {
+        const key = e.code;
+
+        switch (key) {
+            case 'Tab':
+                //check if a node is pressed. if yes, create new node with parent of the selected node
+
+                if (statements.selectedNodes.length > 0) {
+                    //get current location
+                    const firstStatement = statements.selectedNodes[0];
+                    let center = statements.network.getPosition(firstStatement);
+
+                    center = statements.network.canvasToDOM(center);
+                    center.x = center.x + 150;
+                    center.y = center.y - 150;
+                    showStatementEditor(center)
+                }
+
+                break
+            default:
+        }
+    })
 })()
 
 function convertAllStatments(statementsObj) {
+    console.log(statementsObj)
     const statments = [];
     const edges = [];
     for (i in statementsObj) {
@@ -29,6 +47,7 @@ function convertAllStatments(statementsObj) {
         statments.push(statementsObj[i]);
 
         const { parents, kids } = statementsObj[i];
+        console.log(parents, kids)
         parents.forEach(parent => {
             edges.push({ from: parent, to: i });
         })
@@ -72,8 +91,11 @@ function createMap(data) {
     }
     const network = new vis.Network(container, data, options);
 
+    statements.network = network;
+
+
     //create new statement
-    network.on('hold', e => {
+    statements.network.on('hold', e => {
         console.log('hold')
 
         console.dir(e)
@@ -82,32 +104,45 @@ function createMap(data) {
 
         showStatementEditor(center)
 
-        // const { edges, nodes } = e;
-
-        // if (edges.length === 0 && nodes.length === 0) {
-        //     const nodeId = `id${Math.random().toString(16).slice(2)}`;
-        //     // const mapId = getMapId();
-        //     const node = { id: nodeId, label: 'add text' }
-        //     data.nodes.add([node]);
-
-        //     createNode(mapId, node);
-        //     // socket.emit('node create', node)
-        // }
     })
 
-    console.log(state({ network }))
+    statements.network.on('selectNode', e => {
+        console.log('selectNode')
+        console.log(e)
+        statements.selectedNodes = e.nodes;
+
+
+
+    })
+
+    statements.network.on('deselectNode', e => {
+        console.log('deselectNode')
+        statements.selectedNodes = [];
+
+        console.log(cSt)
+    })
+
+
 }
 
-async function createNode(text) {
+async function createStatement(text) {
+    try {
 
-    const res = axios.put(`http://ouri-digital-agent.cf/ibc/app/אורי/${contractId}/create_statement`,
-        {
-            "name": "create_statement",
-            "values": { "parents": [], "text": text, "tags": ["test"] }
-        }
-    )
+        if(!Array.isArray(statements.selectedNodes)) throw new Error ('statements.selectedNodes is not array')
+        if(typeof text !== 'string') throw new Error ('text is not string')
 
-    console.log(res)
+        const res = await axios.put(`http://ouri-digital-agent.cf/ibc/app/אורי/${contractId}/create_statement`,
+            {
+                "name": "create_statement",
+                "values": { "parents": statements.selectedNodes, "text": text, "tags": ["test"] }
+            }
+        )
+        hideEditStatement()
+        console.log(res)
+    } catch (e) {
+        console.error(e);
+        hideEditStatement()
+    }
 }
 
 function showStatementEditor(center) {
@@ -129,13 +164,13 @@ function updateStatement(e) {
     try {
         const text = e.target.children.text.value;
         if (text) {
-            createNode(text);
+            createStatement(text);
             e.target.reset();
         }
     } catch (e) {
         console.error(e)
     }
-
-
 }
+
+
 

@@ -1,18 +1,8 @@
 "use strict";
 
-function state(info) {
-  var network = info.network;
-
-  function inFun() {
-    return {
-      network: network
-    };
-  }
-
-  return {
-    network: network
-  };
-}
+var statements = {
+  selectedNodes: []
+};
 
 (function _callee() {
   var _ref, data;
@@ -34,8 +24,29 @@ function state(info) {
           data = _ref.data;
           console.log(data);
           convertAllStatments(data);
+          document.addEventListener('keyup', function (e) {
+            var key = e.code;
 
-        case 6:
+            switch (key) {
+              case 'Tab':
+                //check if a node is pressed. if yes, create new node with parent of the selected node
+                if (statements.selectedNodes.length > 0) {
+                  //get current location
+                  var firstStatement = statements.selectedNodes[0];
+                  var center = statements.network.getPosition(firstStatement);
+                  center = statements.network.canvasToDOM(center);
+                  center.x = center.x + 150;
+                  center.y = center.y - 150;
+                  showStatementEditor(center);
+                }
+
+                break;
+
+              default:
+            }
+          });
+
+        case 7:
         case "end":
           return _context.stop();
       }
@@ -44,6 +55,7 @@ function state(info) {
 })();
 
 function convertAllStatments(statementsObj) {
+  console.log(statementsObj);
   var statments = [];
   var edges = [];
 
@@ -55,6 +67,7 @@ function convertAllStatments(statementsObj) {
     var _statementsObj$i = statementsObj[i],
         parents = _statementsObj$i.parents,
         kids = _statementsObj$i.kids;
+    console.log(parents, kids);
     parents.forEach(function (parent) {
       edges.push({
         from: parent,
@@ -96,49 +109,80 @@ function createMap(data) {
       widthConstraint: 150
     }
   };
-  var network = new vis.Network(container, data, options); //create new statement
+  var network = new vis.Network(container, data, options);
+  statements.network = network; //create new statement
 
-  network.on('hold', function (e) {
+  statements.network.on('hold', function (e) {
     console.log('hold');
     console.dir(e);
     var center = e.event.center;
-    showStatementEditor(center); // const { edges, nodes } = e;
-    // if (edges.length === 0 && nodes.length === 0) {
-    //     const nodeId = `id${Math.random().toString(16).slice(2)}`;
-    //     // const mapId = getMapId();
-    //     const node = { id: nodeId, label: 'add text' }
-    //     data.nodes.add([node]);
-    //     createNode(mapId, node);
-    //     // socket.emit('node create', node)
-    // }
+    showStatementEditor(center);
   });
-  console.log(state({
-    network: network
-  }));
+  statements.network.on('selectNode', function (e) {
+    console.log('selectNode');
+    console.log(e);
+    statements.selectedNodes = e.nodes;
+  });
+  statements.network.on('deselectNode', function (e) {
+    console.log('deselectNode');
+    statements.selectedNodes = [];
+    console.log(cSt);
+  });
 }
 
-function createNode(text) {
+function createStatement(text) {
   var res;
-  return regeneratorRuntime.async(function createNode$(_context2) {
+  return regeneratorRuntime.async(function createStatement$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          res = axios.put("http://ouri-digital-agent.cf/ibc/app/\u05D0\u05D5\u05E8\u05D9/".concat(contractId, "/create_statement"), {
+          _context2.prev = 0;
+
+          if (Array.isArray(statements.selectedNodes)) {
+            _context2.next = 3;
+            break;
+          }
+
+          throw new Error('statements.selectedNodes is not array');
+
+        case 3:
+          if (!(typeof text !== 'string')) {
+            _context2.next = 5;
+            break;
+          }
+
+          throw new Error('text is not string');
+
+        case 5:
+          _context2.next = 7;
+          return regeneratorRuntime.awrap(axios.put("http://ouri-digital-agent.cf/ibc/app/\u05D0\u05D5\u05E8\u05D9/".concat(contractId, "/create_statement"), {
             "name": "create_statement",
             "values": {
-              "parents": [],
+              "parents": statements.selectedNodes,
               "text": text,
               "tags": ["test"]
             }
-          });
-          console.log(res);
+          }));
 
-        case 2:
+        case 7:
+          res = _context2.sent;
+          hideEditStatement();
+          console.log(res);
+          _context2.next = 16;
+          break;
+
+        case 12:
+          _context2.prev = 12;
+          _context2.t0 = _context2["catch"](0);
+          console.error(_context2.t0);
+          hideEditStatement();
+
+        case 16:
         case "end":
           return _context2.stop();
       }
     }
-  });
+  }, null, null, [[0, 12]]);
 }
 
 function showStatementEditor(center) {
@@ -161,7 +205,7 @@ function updateStatement(e) {
     var text = e.target.children.text.value;
 
     if (text) {
-      createNode(text);
+      createStatement(text);
       e.target.reset();
     }
   } catch (e) {

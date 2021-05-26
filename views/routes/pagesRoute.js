@@ -1,3 +1,4 @@
+const fetch = require('node-fetch');
 const router = require("express").Router();
 
 // index page
@@ -46,12 +47,18 @@ router.get('/maps', function (req, res) {
     }
 });
 
-router.get('/contracts', function (req, res) {
+router.get('/contracts', async (req, res) => {
     try {
-        const user = req.cookies.user;
+        let url = 'http://ouri-digital-agent.cf/ibc/app/אורי';
+        url = encodeURI(url);
+        const r = await fetch(url)
+        const data = await r.json()
 
-        res.render('pages/contracts',);
+        res.render('pages/contracts',{contracts:data});
+
+
     } catch (e) {
+        console.log(e)
         res.redirect('/')
     }
 });

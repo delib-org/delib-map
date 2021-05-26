@@ -12,9 +12,15 @@
 
     <main>
         <h1>Contracts</h1>
-       
-        <button onclick='handleGetContracts()'>Get contracts</button>
-        <div id='contractsRoot' class="maps"/>
+        <div id='contractsRoot' class="maps">
+            <% for (var i=0; i < contracts.length; i++) { %>
+                <div class='card contracts__contract' >
+                    <a href=/statements?contractId=<%= contracts[i].name %>><%= contracts[i].name %></a>
+                       
+                    
+                </div>
+            <% } %>
+        </div>
     </main>
 
     <footer>
