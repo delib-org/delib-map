@@ -1,41 +1,63 @@
-const statements = {selectedNodes:[]};
+class Statements {
+
+    _selectedNodes = [];
+
+    set setSelectedNodes(selectedNodes) {
+        try {
+            if (Array.isArray(selectedNodes)) this._selectedNodes = selectedNodes;
+            else throw new Error('the nodes are not an array')
+
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    get selectedNodes(){
+        return this._selectedNodes;
+    }
+}
+const statements = new Statements();
+
 
 (async () => {
+    try {
+        //get all statments
+        const { data } = await axios.post(`http://ouri-digital-agent.cf/ibc/app/אורי/${contractId}/get_statements`, {
+            "name": "get_statements",
+            "values": { "parent": [] }
+        });
+        console.log(data)
 
+        convertAllStatmentsToMap(data);
 
-    const { data } = await axios.post(`http://ouri-digital-agent.cf/ibc/app/אורי/${contractId}/get_statements`, {
-        "name": "get_statements",
-        "values": { "parent": [] }
-    });
-    console.log(data)
+        document.addEventListener('keyup', e => {
+            const key = e.code;
 
-    convertAllStatments(data);
+            switch (key) {
+                case 'Tab':
+                    //check if a node is pressed. if yes, create new node with parent of the selected node
 
-    document.addEventListener('keyup', e => {
-        const key = e.code;
+                    if (statements.selectedNodes.length > 0) {
+                        //get current location
+                        const firstStatement = statements.selectedNodes[0];
+                        let center = statements.network.getPosition(firstStatement);
 
-        switch (key) {
-            case 'Tab':
-                //check if a node is pressed. if yes, create new node with parent of the selected node
+                        center = statements.network.canvasToDOM(center);
+                        center.x = center.x + 150;
+                        center.y = center.y - 150;
+                        showStatementEditor(center)
+                    }
 
-                if (statements.selectedNodes.length > 0) {
-                    //get current location
-                    const firstStatement = statements.selectedNodes[0];
-                    let center = statements.network.getPosition(firstStatement);
-
-                    center = statements.network.canvasToDOM(center);
-                    center.x = center.x + 150;
-                    center.y = center.y - 150;
-                    showStatementEditor(center)
-                }
-
-                break
-            default:
-        }
-    })
+                    break
+                default:
+            }
+        })
+    } catch (e) {
+        console.error(e)
+    }
 })()
 
-function convertAllStatments(statementsObj) {
+function convertAllStatmentsToMap(statementsObj) {
     console.log(statementsObj)
     const statments = [];
     const edges = [];
@@ -107,9 +129,8 @@ function createMap(data) {
     })
 
     statements.network.on('selectNode', e => {
-        console.log('selectNode')
-        console.log(e)
-        statements.selectedNodes = e.nodes;
+      
+        statements.setSelectedNodes = e.nodes;
 
 
 
@@ -117,7 +138,7 @@ function createMap(data) {
 
     statements.network.on('deselectNode', e => {
         console.log('deselectNode')
-        statements.selectedNodes = [];
+        statements.setSelectedNodes = [];
 
         console.log(cSt)
     })
@@ -128,8 +149,10 @@ function createMap(data) {
 async function createStatement(text) {
     try {
 
-        if(!Array.isArray(statements.selectedNodes)) throw new Error ('statements.selectedNodes is not array')
-        if(typeof text !== 'string') throw new Error ('text is not string')
+        hideEditStatement();
+
+        if (!Array.isArray(statements.selectedNodes)) throw new Error('statements.selectedNodes is not array')
+        if (typeof text !== 'string') throw new Error('text is not string')
 
         const res = await axios.put(`http://ouri-digital-agent.cf/ibc/app/אורי/${contractId}/create_statement`,
             {
@@ -137,7 +160,7 @@ async function createStatement(text) {
                 "values": { "parents": statements.selectedNodes, "text": text, "tags": ["test"] }
             }
         )
-        hideEditStatement()
+
         console.log(res)
     } catch (e) {
         console.error(e);

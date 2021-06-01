@@ -1,5 +1,11 @@
 "use strict";
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Statements = function Statements() {
+  _classCallCheck(this, Statements);
+};
+
 var statements = {
   selectedNodes: []
 };
@@ -23,7 +29,7 @@ var statements = {
           _ref = _context.sent;
           data = _ref.data;
           console.log(data);
-          convertAllStatments(data);
+          convertAllStatmentsToMap(data);
           document.addEventListener('keyup', function (e) {
             var key = e.code;
 
@@ -54,7 +60,7 @@ var statements = {
   });
 })();
 
-function convertAllStatments(statementsObj) {
+function convertAllStatmentsToMap(statementsObj) {
   console.log(statementsObj);
   var statments = [];
   var edges = [];
@@ -137,24 +143,25 @@ function createStatement(text) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.prev = 0;
+          hideEditStatement();
 
           if (Array.isArray(statements.selectedNodes)) {
-            _context2.next = 3;
+            _context2.next = 4;
             break;
           }
 
           throw new Error('statements.selectedNodes is not array');
 
-        case 3:
+        case 4:
           if (!(typeof text !== 'string')) {
-            _context2.next = 5;
+            _context2.next = 6;
             break;
           }
 
           throw new Error('text is not string');
 
-        case 5:
-          _context2.next = 7;
+        case 6:
+          _context2.next = 8;
           return regeneratorRuntime.awrap(axios.put("http://ouri-digital-agent.cf/ibc/app/\u05D0\u05D5\u05E8\u05D9/".concat(contractId, "/create_statement"), {
             "name": "create_statement",
             "values": {
@@ -164,9 +171,8 @@ function createStatement(text) {
             }
           }));
 
-        case 7:
+        case 8:
           res = _context2.sent;
-          hideEditStatement();
           console.log(res);
           _context2.next = 16;
           break;
