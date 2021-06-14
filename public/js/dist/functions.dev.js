@@ -88,3 +88,15 @@ function getMapId() {
   var urlParams = new URLSearchParams(window.location.search);
   return urlParams.get('mapId');
 }
+
+function deleteNodeFn() {
+  try {
+    console.dir(networkState({}));
+
+    var _networkState2 = networkState({}),
+        from = _networkState2.from,
+        connect = _networkState2.connect;
+  } catch (e) {
+    console.error(e);
+  }
+}

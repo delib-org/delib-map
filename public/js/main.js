@@ -5,11 +5,12 @@ const editForm = document.getElementById('editForm');
 const linkFav = document.getElementById('linkFav');
 const linkFavIcon = document.getElementById('linkFavIcon');
 const deleteEdge = document.getElementById('deleteEdge');
+const deleteNode = document.getElementById('deleteNode');
 editBox.style.display = 'none'
 
 linkFav.addEventListener('click', connectTheNode)
 deleteEdge.addEventListener('click', deleteEdgeFn);
-
+deleteNode.addEventListener('click',deleteNodeFn)
 
 let data;
 

@@ -6,9 +6,11 @@ var editForm = document.getElementById('editForm');
 var linkFav = document.getElementById('linkFav');
 var linkFavIcon = document.getElementById('linkFavIcon');
 var deleteEdge = document.getElementById('deleteEdge');
+var deleteNode = document.getElementById('deleteNode');
 editBox.style.display = 'none';
 linkFav.addEventListener('click', connectTheNode);
 deleteEdge.addEventListener('click', deleteEdgeFn);
+deleteNode.addEventListener('click', deleteNodeFn);
 var data; //clouser for nodes and edges
 
 function networkStateClouser(_ref) {

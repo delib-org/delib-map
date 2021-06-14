@@ -3,7 +3,7 @@ function handleUpdate(e) {
     e.preventDefault();
 
     const nodeName = document.getElementById('nodeName').value;
-    const {from} = networkState({});
+    const { from } = networkState({});
     const nodeId = from
 
     data.nodes.updateOnly({ id: nodeId, label: nodeName });
@@ -78,4 +78,13 @@ function deleteEdgeFn(e) {
 function getMapId() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('mapId');
+}
+
+function deleteNodeFn() {
+    try {
+        console.dir(networkState({}));
+        const { from, connect } = networkState({});
+    } catch (e) {
+        console.error(e)
+    }
 }

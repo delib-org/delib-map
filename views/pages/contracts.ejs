@@ -1,0 +1,30 @@
+<html lang="en">
+
+<head>
+    <%- include('../components/head'); %>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include('../components/header'); %>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+        integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    </header>
+
+    <main>
+        <h1>Contracts</h1>
+        
+     
+        <select class="selectBox" id="agents" onchange="getContracts(event)"></select>
+            <div id='contractsRoot' class="maps"/>
+    </main>
+
+    <footer>
+        <%- include('../components/footer'); %>
+    </footer>
+    <script src='js/dist/contracts.js'></script>
+</body>
+
+</html>

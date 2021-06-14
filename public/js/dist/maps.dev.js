@@ -6,7 +6,7 @@ function renderMaps(maps) {
   var html = '';
   maps.forEach(function (map) {
     console.log(map);
-    html += "<p><a href=\"/map?mapId=".concat(map._id, "\">Map: ").concat(map.name, "</a></p>");
+    html += "<div class='maps__map'><a href=\"/map?mapId=".concat(map._id, "\">Map: ").concat(map.name, "</a></div>");
   });
   mapsRoot.innerHTML = html;
 }

@@ -1,43 +1,18 @@
-:root {
-  --mainBackground: #32527b;
-  --subBackground: #ee7171;
-  --mainColor: white;
-  --textHeader: rgba(0, 0, 0, 0.78);
-  --textHeaderSize: 1.3rem;
-  --textHeaderWeight: 600;
-  --textSubHeader: rgba(0, 0, 0, 0.68);
-  --textHeaderSize: 1.1rem;
-  --textHeaderSubTitleSize: 1rem;
-  --textRegular: rgba(0, 0, 0, 0.55);
-  --textRegularSize: 1rem;
-  --maxWidthOnPC: 550px;
-  --accent: #4269E2;
-  --primary: #2B74B1;
-  --halfPrimary: #7994E7;
-  --secondary: #F0F4FF;
-  --additional: #F2F2F2;
-  --white: white;
-  --black: black;
-  --gray5: #F9F9F9;
-  --gray4: #F2F2F2;
-  --gray2: #D6D6D6;
-  --gray1: #7C7C7C;
-  --gray0: rgb(77, 77, 77);
-  --roundBorderSmall: 6px;
-  --roundBorder: 12px;
-  --roundBorderLarge: 16px;
-  /* font sizes */
-  --size21: 2.2rem;
-  --size17: 1.4rem;
-  --size16: 1.3rem;
-  --size15: 1.2rem;
-  --size13: 1rem;
-  --size12: 0.9rem;
-  --size11: .8rem;
-  /* padding */
-  --regPadding: 16px;
-  /* shadows */
-  --mediumShadow: 0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
+.maps {
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+.maps__map {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+}
+
+.map {
+  background-color: white;
 }
 
 :root {
@@ -93,6 +68,25 @@ body {
   direction: ltr;
 }
 
+.nav {
+  display: flex;
+  width: 100%;
+  background-color: #d1d1d1;
+}
+.nav__item {
+  padding: 20px 40px;
+}
+.nav__link {
+  width: fit-content;
+  box-sizing: content-box;
+  background-color: #bcbcbc;
+  border-bottom: 6px solid #bcbcbc;
+}
+.nav__link:hover {
+  background-color: #a3a3a3;
+  border-bottom: 6px solid gray;
+}
+
 /* ------ page----------- */
 .page {
   width: 100%;
@@ -112,8 +106,11 @@ body {
   z-index: 100;
 }
 
-.page__main {
+main {
   overflow-y: auto;
+}
+main h1 {
+  padding: 0px 20px;
 }
 
 .page__footer {
@@ -273,6 +270,13 @@ body {
 
 /*  Buttons */
 .buttons {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-top: 10px;
+  justify-content: space-evenly;
+}
+.buttons__button {
   width: max-content;
   padding: 12px 25px;
   margin: 5px 10px;
@@ -285,23 +289,17 @@ body {
   display: flex;
   align-items: center;
 }
-.buttons__box {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding-top: 10px;
-}
-.buttons--small {
+.buttons__button--small {
   font-size: var(--size11);
   padding: 5px 7px;
 }
-.buttons--cancel {
+.buttons__button--cancel {
   background: orange;
 }
-.buttons--danger {
+.buttons__button--danger {
   background: red;
 }
-.buttons--nonactive {
+.buttons__button--nonactive {
   opacity: 0.3;
 }
 
@@ -328,18 +326,6 @@ body {
   background: rgba(126, 122, 122, 0.21);
 }
 
-.confirm {
-  background: #51d051;
-}
-
-.cancel {
-  background: #e85353;
-}
-
-.negative {
-  color: red;
-}
-
 .fav {
   background: var(--halfPrimary);
   width: 60px;
@@ -357,6 +343,9 @@ body {
 .fav--small {
   width: 40px;
   height: 40px;
+}
+.fav--negative {
+  background: red;
 }
 .fav--elevated {
   box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.5);
@@ -390,6 +379,18 @@ body {
 
 #linkFav {
   background: var(--gray2);
+}
+
+.confirm {
+  background: #51d051;
+}
+
+.cancel {
+  background: #e85353;
+}
+
+.negative {
+  color: red;
 }
 
 @keyframes blinkFav {
@@ -651,12 +652,30 @@ input[type=checkbox] {
 }
 
 #mynetwork {
-  width: 99vw;
-  height: 88vh;
   border: 1px solid lightgray;
+}
+
+#showStatementEditor {
+  display: none;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px #00000052;
 }
 
 .deleteEdge {
   position: fixed;
   display: none;
+}
+
+.selectBox {
+  padding: 5px;
+  border: none;
+  font-size: 1.3rem;
+  position: relative;
+  margin: 29px;
+  left: 50%;
+  transform: translateX(-50%);
 }

@@ -1,0 +1,114 @@
+{
+	"info": {
+		"_postman_id": "1ec100e7-e05b-4ce7-9537-3120a969607b",
+		"name": "Deliberation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://ouri-digital-agent.cf/ibc/app",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://ouri-digital-agent.cf/ibc/app",
+					"protocol": "http",
+					"host": [
+						"ouri-digital-agent",
+						"cf"
+					],
+					"path": [
+						"ibc",
+						"app"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://ouri-digital-agent.cf/ibc/app/אורי",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://ouri-digital-agent.cf/ibc/app/אורי",
+					"protocol": "http",
+					"host": [
+						"ouri-digital-agent",
+						"cf"
+					],
+					"path": [
+						"ibc",
+						"app",
+						"אורי"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://ouri-digital-agent.cf/ibc/app/אורי/delib/create_statement",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"create_statement\",\n    \"values\": {\"parents\":[], \"text\": \"Hello World\", \"tags\": [\"test\"]}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://ouri-digital-agent.cf/ibc/app/אורי/delib/create_statement",
+					"protocol": "http",
+					"host": [
+						"ouri-digital-agent",
+						"cf"
+					],
+					"path": [
+						"ibc",
+						"app",
+						"אורי",
+						"delib",
+						"create_statement"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://ouri-digital-agent.cf/ibc/app/אורי/delib/get_statements",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"get_statements\",\n    \"values\": {\"parent\": []}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://ouri-digital-agent.cf/ibc/app/אורי/delib/get_statements",
+					"protocol": "http",
+					"host": [
+						"ouri-digital-agent",
+						"cf"
+					],
+					"path": [
+						"ibc",
+						"app",
+						"אורי",
+						"delib",
+						"get_statements"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
