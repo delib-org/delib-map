@@ -49,12 +49,13 @@ router.get('/maps', function (req, res) {
 
 router.get('/contracts', async (req, res) => {
     try {
-        let url = 'http://ouri-digital-agent.cf/ibc/app/אורי';
-        url = encodeURI(url);
-        const r = await fetch(url)
-        const data = await r.json()
+        // let url = 'http://ouri-digital-agent.cf/ibc/app/tal';
+        // url = encodeURI(url);
+        // const r = await fetch(url)
+        // const data = await r.json()
 
-        res.render('pages/contracts',{contracts:data});
+        // res.render('pages/contracts',{contracts:data});
+        res.render('pages/contracts');
 
 
     } catch (e) {
@@ -67,11 +68,13 @@ router.get('/statements', function (req, res) {
 
     try {
         const user = req.cookies.user;
-        const contractId = req.query.contractId
+        console.log(req.query)
+        const {contractId, agent} = req.query;
 
-        if (!contractId) throw new Error('No contract Id in query')
+        if (!contractId) throw new Error('No contract Id in query');
+        if (!agent) throw new Error('No agent in query')
 
-        res.render('pages/statements', { contractId });
+        res.render('pages/statements', { contractId, agent});
     } catch (e) {
         console.error(e)
         res.redirect('/')

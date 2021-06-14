@@ -735,3 +735,14 @@ input[type=checkbox] {
     position: fixed;
     display: none;
 }
+
+.selectBox{
+    padding: 5px;
+    border: none;
+    font-size: 1.3rem;
+    
+    position: relative;
+    margin: 29px;
+    left: 50%;
+    transform: translateX(-50%);
+}

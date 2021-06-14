@@ -6,6 +6,7 @@
             integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+        <script src="https://kit.fontawesome.com/059cd2abab.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="container">
@@ -17,6 +18,7 @@
     <main>
         <h1>Statements of contract: <%=contractId%>
         </h1>
+        <button onclick="getStatement('52d255b32b183e127f4a47099f4cb6e4c9c0d021',2)">Get</button>
 
 
         <div id='statmentsRoot' class="statments" />
@@ -36,7 +38,8 @@
         <%- include('../components/footer'); %>
     </footer>
     <script>
-        const contractId = "<%=contractId%>"
+        const contractId = "<%=contractId%>";
+        const agent = "<%=agent%>"
     </script>
     <script src='../js/statements.js'></script>
 </body>

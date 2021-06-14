@@ -40,50 +40,41 @@ router.get('/maps', function (req, res) {
   }
 });
 router.get('/contracts', function _callee(req, res) {
-  var url, r, data;
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          _context.prev = 0;
-          url = 'http://ouri-digital-agent.cf/ibc/app/אורי';
-          url = encodeURI(url);
-          _context.next = 5;
-          return regeneratorRuntime.awrap(fetch(url));
+          try {
+            // let url = 'http://ouri-digital-agent.cf/ibc/app/tal';
+            // url = encodeURI(url);
+            // const r = await fetch(url)
+            // const data = await r.json()
+            // res.render('pages/contracts',{contracts:data});
+            res.render('pages/contracts');
+          } catch (e) {
+            console.log(e);
+            res.redirect('/');
+          }
 
-        case 5:
-          r = _context.sent;
-          _context.next = 8;
-          return regeneratorRuntime.awrap(r.json());
-
-        case 8:
-          data = _context.sent;
-          res.render('pages/contracts', {
-            contracts: data
-          });
-          _context.next = 16;
-          break;
-
-        case 12:
-          _context.prev = 12;
-          _context.t0 = _context["catch"](0);
-          console.log(_context.t0);
-          res.redirect('/');
-
-        case 16:
+        case 1:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[0, 12]]);
+  });
 });
 router.get('/statements', function (req, res) {
   try {
     var user = req.cookies.user;
-    var contractId = req.query.contractId;
+    console.log(req.query);
+    var _req$query = req.query,
+        contractId = _req$query.contractId,
+        agent = _req$query.agent;
     if (!contractId) throw new Error('No contract Id in query');
+    if (!agent) throw new Error('No agent in query');
     res.render('pages/statements', {
-      contractId: contractId
+      contractId: contractId,
+      agent: agent
     });
   } catch (e) {
     console.error(e);
