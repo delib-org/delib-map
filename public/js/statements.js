@@ -92,25 +92,7 @@ function updateStatement(e) {
     }
 }
 
-async function getStatement(statmentId) {
-    try {
 
-        const {data, error} = await axios.post(`http://ouri-digital-agent.cf/ibc/app/${agent}/${contractId}/get_statement_dynasty`,
-            {
-                "name": "get_statement_dynasty",
-                "values": { "parent": statmentId, "levels": 3 }
-            }
-        )
-        if(error) throw new Error(error);
-
-        console.log(data);
-        statements.updateStatements(data);
-        statements.convertAllStatmentsToMap(statements.statementsObj)
-
-    } catch (e) {
-
-    }
-}
 
 
 

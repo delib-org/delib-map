@@ -16,7 +16,7 @@ class Statements {
     showAddButton(statementId) {
         if (statementId !== 'add') {
             this.data.nodes.add({
-                id: "add", 
+                id: "add",
                 shape: 'icon',
                 icon: {
                     face: 'FontAwesome',
@@ -31,7 +31,7 @@ class Statements {
                 length: 60,
                 smoth: {
                     type: 'cubicBezier',
-                    forceDirection:['horizontal']
+                    forceDirection: ['horizontal']
                 }
             })
         }
@@ -40,6 +40,26 @@ class Statements {
     removeAddButton() {
         this.data.nodes.remove('add');
         this.data.edges.remove('add')
+    }
+
+    async getStatement(statmentId) {
+        try {
+
+            const { data, error } = await axios.post(`http://ouri-digital-agent.cf/ibc/app/${agent}/${contractId}/get_statement_dynasty`,
+                {
+                    "name": "get_statement_dynasty",
+                    "values": { "parent": statmentId, "levels": 3 }
+                }
+            )
+            if (error) throw new Error(error);
+
+            console.log(data);
+            this.updateStatements(data);
+            this.convertAllStatmentsToMap(statements.statementsObj)
+
+        } catch (e) {
+
+        }
     }
 
     convertAllStatmentsToMap(statementsObj) {
@@ -96,6 +116,13 @@ class Statements {
                 margin: 4,
                 shadow: true,
                 widthConstraint: 150,
+            },
+            edges: {
+                arrows: {
+                    to: {
+                        enabled: true
+                    }
+                }
             }
         }
         this.network = new vis.Network(container, data, options);
@@ -118,20 +145,26 @@ class Statements {
         this.network.on('selectNode', e => {
             console.log(e)
             const { center } = e.event;
-            statements.setSelectedNodes = e.nodes;
 
-            // let getKids = confirm('should I get sub statements?')
-            // if (getKids) { 
-            //     getStatement(e.nodes[0]);
-            // }
+
+
             console.log(statements.selectedNodes);
-            if(statements.selectedNodes[0] === 'add'){
+            if (e.nodes[0] === 'add') {
                 showStatementEditor(center);
             } else {
-                statements.showAddButton(statements.selectedNodes[0]);
+
+
+                const getKids = confirm('should I get sub statements?')
+                if (getKids) {
+                    this.getStatement(e.nodes[0]);
+                } else {
+                    this.setSelectedNodes = e.nodes;
+                    this.showAddButton(this.selectedNodes[0]);
+                }
+
             }
 
-            
+
 
             //add temprary node
 
@@ -141,8 +174,12 @@ class Statements {
         this.network.on('deselectNode', e => {
             try {
                 console.log('deselectNode')
-                statements.setSelectedNodes = [];
-                statements.removeAddButton(statements.selectedNodes[0]);
+                console.log(e)
+
+                if (e.nodes[0] !== 'add') {
+                    statements.setSelectedNodes = [];
+                    statements.removeAddButton(statements.selectedNodes[0]);
+                }
             } catch (e) {
                 console.error(e);
             }
