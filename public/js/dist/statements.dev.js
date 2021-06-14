@@ -1,14 +1,6 @@
 "use strict";
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Statements = function Statements() {
-  _classCallCheck(this, Statements);
-};
-
-var statements = {
-  selectedNodes: []
-};
+var statements = new Statements();
 
 (function _callee() {
   var _ref, data;
@@ -17,19 +9,21 @@ var statements = {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          _context.next = 2;
-          return regeneratorRuntime.awrap(axios.post("http://ouri-digital-agent.cf/ibc/app/\u05D0\u05D5\u05E8\u05D9/".concat(contractId, "/get_statements"), {
+          _context.prev = 0;
+          _context.next = 3;
+          return regeneratorRuntime.awrap(axios.post("http://ouri-digital-agent.cf/ibc/app/".concat(agent, "/").concat(contractId, "/get_statements"), {
             "name": "get_statements",
             "values": {
               "parent": []
             }
           }));
 
-        case 2:
+        case 3:
           _ref = _context.sent;
           data = _ref.data;
           console.log(data);
-          convertAllStatmentsToMap(data);
+          statements.updateStatements(data);
+          statements.convertAllStatmentsToMap(data);
           document.addEventListener('keyup', function (e) {
             var key = e.code;
 
@@ -51,90 +45,21 @@ var statements = {
               default:
             }
           });
+          _context.next = 14;
+          break;
 
-        case 7:
+        case 11:
+          _context.prev = 11;
+          _context.t0 = _context["catch"](0);
+          console.error(_context.t0);
+
+        case 14:
         case "end":
           return _context.stop();
       }
     }
-  });
+  }, null, null, [[0, 11]]);
 })();
-
-function convertAllStatmentsToMap(statementsObj) {
-  console.log(statementsObj);
-  var statments = [];
-  var edges = [];
-
-  for (i in statementsObj) {
-    //transform to vis js semantic
-    statementsObj[i].id = i;
-    statementsObj[i].label = statementsObj[i].text;
-    statments.push(statementsObj[i]);
-    var _statementsObj$i = statementsObj[i],
-        parents = _statementsObj$i.parents,
-        kids = _statementsObj$i.kids;
-    console.log(parents, kids);
-    parents.forEach(function (parent) {
-      edges.push({
-        from: parent,
-        to: i
-      });
-    });
-    kids.forEach(function (kid) {
-      edges.push({
-        from: i,
-        to: kid
-      });
-    });
-  }
-
-  data = {
-    nodes: statments,
-    edges: edges
-  };
-  console.log(data);
-  createMap(data);
-}
-
-function createMap(data) {
-  var container = document.getElementById("mynetwork");
-  var options = {
-    nodes: {
-      color: {
-        border: 'blue',
-        background: 'white'
-      },
-      shape: 'box',
-      fixed: false,
-      font: '12px arial blue',
-      scaling: {
-        label: true
-      },
-      margin: 4,
-      shadow: true,
-      widthConstraint: 150
-    }
-  };
-  var network = new vis.Network(container, data, options);
-  statements.network = network; //create new statement
-
-  statements.network.on('hold', function (e) {
-    console.log('hold');
-    console.dir(e);
-    var center = e.event.center;
-    showStatementEditor(center);
-  });
-  statements.network.on('selectNode', function (e) {
-    console.log('selectNode');
-    console.log(e);
-    statements.selectedNodes = e.nodes;
-  });
-  statements.network.on('deselectNode', function (e) {
-    console.log('deselectNode');
-    statements.selectedNodes = [];
-    console.log(cSt);
-  });
-}
 
 function createStatement(text) {
   var res;
@@ -162,7 +87,7 @@ function createStatement(text) {
 
         case 6:
           _context2.next = 8;
-          return regeneratorRuntime.awrap(axios.put("http://ouri-digital-agent.cf/ibc/app/\u05D0\u05D5\u05E8\u05D9/".concat(contractId, "/create_statement"), {
+          return regeneratorRuntime.awrap(axios.put("http://ouri-digital-agent.cf/ibc/app/".concat(agent, "/").concat(contractId, "/create_statement"), {
             "name": "create_statement",
             "values": {
               "parents": statements.selectedNodes,
@@ -217,4 +142,52 @@ function updateStatement(e) {
   } catch (e) {
     console.error(e);
   }
+}
+
+function getStatement(statmentId) {
+  var _ref2, data, error;
+
+  return regeneratorRuntime.async(function getStatement$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.prev = 0;
+          _context3.next = 3;
+          return regeneratorRuntime.awrap(axios.post("http://ouri-digital-agent.cf/ibc/app/".concat(agent, "/").concat(contractId, "/get_statement_dynasty"), {
+            "name": "get_statement_dynasty",
+            "values": {
+              "parent": statmentId,
+              "levels": 3
+            }
+          }));
+
+        case 3:
+          _ref2 = _context3.sent;
+          data = _ref2.data;
+          error = _ref2.error;
+
+          if (!error) {
+            _context3.next = 8;
+            break;
+          }
+
+          throw new Error(error);
+
+        case 8:
+          console.log(data);
+          statements.updateStatements(data);
+          statements.convertAllStatmentsToMap(statements.statementsObj);
+          _context3.next = 15;
+          break;
+
+        case 13:
+          _context3.prev = 13;
+          _context3.t0 = _context3["catch"](0);
+
+        case 15:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  }, null, null, [[0, 13]]);
 }
