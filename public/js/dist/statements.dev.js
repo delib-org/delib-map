@@ -11,7 +11,7 @@ var statements = new Statements();
         case 0:
           _context.prev = 0;
           _context.next = 3;
-          return regeneratorRuntime.awrap(axios.post("https://ouri-digital-agent.cf/ibc/app/".concat(agent, "/").concat(contractId, "/get_statements"), {
+          return regeneratorRuntime.awrap(axios.post("http://ouri-digital-agent.cf/ibc/app/".concat(agent, "/").concat(contractId, "/get_statements"), {
             "name": "get_statements",
             "values": {
               "parent": []
@@ -87,7 +87,7 @@ function createStatement(text) {
 
         case 6:
           _context2.next = 8;
-          return regeneratorRuntime.awrap(axios.put("https://ouri-digital-agent.cf/ibc/app/".concat(agent, "/").concat(contractId, "/create_statement"), {
+          return regeneratorRuntime.awrap(axios.put("http://ouri-digital-agent.cf/ibc/app/".concat(agent, "/").concat(contractId, "/create_statement"), {
             "name": "create_statement",
             "values": {
               "parents": statements.selectedNodes,
