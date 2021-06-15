@@ -1,5 +1,3 @@
-
-
 const statements = new Statements();
 
 (async () => {
