@@ -1,5 +1,11 @@
 "use strict";
 
+window.onload = function () {
+  $(function () {
+    if (window.location.protocol === "https:") window.location.protocol = "http";
+  });
+};
+
 var statements = new Statements();
 
 (function _callee() {
