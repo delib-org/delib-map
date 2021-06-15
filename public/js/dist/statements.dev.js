@@ -1,11 +1,5 @@
 "use strict";
 
-window.onload = function () {
-  (function () {
-    if (window.location.protocol === "https:") window.location.protocol = "http";
-  })();
-};
-
 var statements = new Statements();
 
 (function _callee() {
@@ -17,7 +11,7 @@ var statements = new Statements();
         case 0:
           _context.prev = 0;
           _context.next = 3;
-          return regeneratorRuntime.awrap(axios.post("http://ouri-digital-agent.cf/ibc/app/".concat(agent, "/").concat(contractId, "/get_statements"), {
+          return regeneratorRuntime.awrap(axios.post("https://ouri-digital-agent.cf/ibc/app/".concat(agent, "/").concat(contractId, "/get_statements"), {
             "name": "get_statements",
             "values": {
               "parent": []

@@ -1,9 +1,4 @@
-window.onload=function(){
-    (function(){
-        if(window.location.protocol==="https:")
-            window.location.protocol="http";
-    })();
-}
+
 
 const statements = new Statements();
 
@@ -11,7 +6,7 @@ const statements = new Statements();
 
     try {
         //get all statments
-        const { data } = await axios.post(`http://ouri-digital-agent.cf/ibc/app/${agent}/${contractId}/get_statements`, {
+        const { data } = await axios.post(`https://ouri-digital-agent.cf/ibc/app/${agent}/${contractId}/get_statements`, {
             "name": "get_statements",
             "values": { "parent": [] }
         });
