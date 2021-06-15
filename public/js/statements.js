@@ -1,8 +1,8 @@
 window.onload=function(){
-    $(function(){
+    (function(){
         if(window.location.protocol==="https:")
             window.location.protocol="http";
-    });
+    })();
 }
 
 const statements = new Statements();
