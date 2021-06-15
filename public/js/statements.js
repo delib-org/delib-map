@@ -53,7 +53,7 @@ async function createStatement(text) {
         if (!Array.isArray(statements.selectedNodes)) throw new Error('statements.selectedNodes is not array')
         if (typeof text !== 'string') throw new Error('text is not string')
 
-        const res = await axios.put(`http://ouri-digital-agent.cf/ibc/app/${agent}/${contractId}/create_statement`,
+        const res = await axios.put(`https://ouri-digital-agent.cf/ibc/app/${agent}/${contractId}/create_statement`,
             {
                 "name": "create_statement",
                 "values": { "parents": statements.selectedNodes, "text": text, "tags": ["test"] }
