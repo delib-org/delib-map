@@ -1,3 +1,6 @@
+
+const backendPath = `http://192.168.1.129:5001/ibc/app`;
+
 class Agents {
     agents = [];
     _selectedAgent = '';
@@ -19,7 +22,7 @@ class Agents {
 
     getAgents = async function () {
         try {
-            const { data } = await axios.get('http://ouri-digital-agent.cf/ibc/app')
+            const { data } = await axios.get(backendPath)
             if (!Array.isArray(data)) {
                 console.error(data);
                 throw new Error('server respond with non array agents');
@@ -55,12 +58,11 @@ agents.getAgents();
 async function getContracts(ev) {
     try {
         //is ev type of event
-
         const agent = ev.target.value;
         if(!agent) throw new Error('no agent')
         agents.setSelectedAgent = agent;
 
-        const { data } = await axios.get(`http://ouri-digital-agent.cf/ibc/app/${agent}`)
+        const { data } = await axios.get(backendPath + `/${agent}`)
         console.log(data);
         renderContracts(data);
     } catch (e) {
