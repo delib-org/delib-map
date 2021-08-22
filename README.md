@@ -1,6 +1,6 @@
 delib-map
 TODO:
-- change vis.js to hierarchical layout
-- test adding nodes
-- edit nodes
+- fix multiple levels weirdness in layout
+- fix the UI into something that enables editing and deleting
+- auto refresh data
 
