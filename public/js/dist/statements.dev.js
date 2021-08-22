@@ -11,7 +11,7 @@ var statements = new Statements();
         case 0:
           _context.prev = 0;
           _context.next = 3;
-          return regeneratorRuntime.awrap(axios.post("http://ouri-digital-agent.cf/ibc/app/".concat(agent, "/").concat(contractId, "/get_statements"), {
+          return regeneratorRuntime.awrap(axios.post(statements._backendPath + "/".concat(agent, "/").concat(contractId, "/get_statements"), {
             "name": "get_statements",
             "values": {
               "parent": []
@@ -23,6 +23,8 @@ var statements = new Statements();
           data = _ref.data;
           console.log(data);
           statements.updateStatements(data);
+          console.log(agent);
+          console.log(contractId);
           statements.convertAllStatmentsToMap(data);
           document.addEventListener('keyup', function (e) {
             var key = e.code;
@@ -45,20 +47,20 @@ var statements = new Statements();
               default:
             }
           });
-          _context.next = 14;
+          _context.next = 16;
           break;
 
-        case 11:
-          _context.prev = 11;
+        case 13:
+          _context.prev = 13;
           _context.t0 = _context["catch"](0);
           console.error(_context.t0);
 
-        case 14:
+        case 16:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[0, 11]]);
+  }, null, null, [[0, 13]]);
 })();
 
 function createStatement(text) {
@@ -87,7 +89,7 @@ function createStatement(text) {
 
         case 6:
           _context2.next = 8;
-          return regeneratorRuntime.awrap(axios.put("http://ouri-digital-agent.cf/ibc/app/".concat(agent, "/").concat(contractId, "/create_statement"), {
+          return regeneratorRuntime.awrap(axios.put(statements._backendPath + "/".concat(agent, "/").concat(contractId, "/create_statement"), {
             "name": "create_statement",
             "values": {
               "parents": statements.selectedNodes,

@@ -34,6 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var backendPath = "http://192.168.1.129:5001/ibc/app";
 var Agents = /** @class */ (function () {
     function Agents() {
         this.agents = [];
@@ -45,7 +46,7 @@ var Agents = /** @class */ (function () {
                     switch (_a.label) {
                         case 0:
                             _a.trys.push([0, 2, , 3]);
-                            return [4 /*yield*/, axios.get('http://ouri-digital-agent.cf/ibc/app')];
+                            return [4 /*yield*/, axios.get(backendPath)];
                         case 1:
                             data = (_a.sent()).data;
                             if (!Array.isArray(data)) {
@@ -119,7 +120,7 @@ function getContracts(ev) {
                     if (!agent)
                         throw new Error('no agent');
                     agents.setSelectedAgent = agent;
-                    return [4 /*yield*/, axios.get("http://ouri-digital-agent.cf/ibc/app/" + agent)];
+                    return [4 /*yield*/, axios.get(backendPath + ("/" + agent))];
                 case 1:
                     data = (_a.sent()).data;
                     console.log(data);

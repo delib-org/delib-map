@@ -1,5 +1,5 @@
 class Statements {
-
+    _backendPath = `http://192.168.1.129:5001/ibc/app`;
     constructor() {
         this.data = {}
     }
@@ -45,14 +45,13 @@ class Statements {
     async getStatement(statmentId) {
         try {
 
-            const { data, error } = await axios.post(`http://ouri-digital-agent.cf/ibc/app/${agent}/${contractId}/get_statement_dynasty`,
+            const { data, error } = await axios.post(this._backendPath +`/${agent}/${contractId}/get_statement_dynasty`,
                 {
                     "name": "get_statement_dynasty",
                     "values": { "parent": statmentId, "levels": 3 }
                 }
             )
             if (error) throw new Error(error);
-
             console.log(data);
             this.updateStatements(data);
             this.convertAllStatmentsToMap(statements.statementsObj)
@@ -123,7 +122,13 @@ class Statements {
                         enabled: true
                     }
                 }
-            }
+            },
+            layout: {
+                hierarchical: {
+                    direction: 'UD',
+                    sortMethod: 'directed', 
+                }
+            },
         }
         this.network = new vis.Network(container, data, options);
 
